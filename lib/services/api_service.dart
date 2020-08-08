@@ -16,6 +16,22 @@ class APIService {
     return config != null && config.isUsable();
   }
 
+  Future<bool> ping() async {
+    assert(config != null && config.isConnectable());
+
+    Uri uri = Uri.https(config.host, '${config.path}$URIPrefix/rt');
+
+    print(uri);
+    var response = await http.get(uri);
+    if (response.statusCode == HttpStatus.unauthorized) {
+      if (json.decode(response.body)['message'] == 'Unauthorized') {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   Future<RTSystemInfo> fetchRTSystemInfo() async {
     assert(isUsable());
 
@@ -28,9 +44,7 @@ class APIService {
     Uri uri = Uri.https(config.host, '${config.path}$URIPrefix/rt');
 
     print(uri);
-    print(headers.toString());
     var response = await http.get(uri, headers: headers);
-    print(response.body);
     if (response.statusCode == HttpStatus.ok) {
       return RTSystemInfo.readJSON(json.decode(response.body));
     } else {

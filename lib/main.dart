@@ -1,12 +1,11 @@
-import 'package:rt_flutter/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:rt_flutter/screens/splash_screen.dart';
 
 void main() {
   runApp(RT());
 }
 
 class RT extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,7 +14,7 @@ class RT extends StatelessWidget {
         primarySwatch: Colors.orange,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeScreen(title: 'RT'),
+      home: SplashScreen(),
     );
   }
 }

@@ -8,8 +8,12 @@ class APIConfig {
 
   APIConfig();
 
+  bool isConnectable() {
+    return host != '';
+  }
+
   bool isUsable() {
-    return host != null && canAuth();
+    return isConnectable() && canAuth();
   }
 
   bool canAuth() {
