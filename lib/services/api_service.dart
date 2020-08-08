@@ -53,6 +53,21 @@ class APIService {
     }
   }
 
+  Future<Paginable<Queue>> fetchQueues() async {
+    assert(isUsable());
+
+    var response = await http.get(
+        Uri.https(config.host, '${config.path}$prefix/queues/all',
+            {"fields": "Name,Description"}),
+        headers: baseHeaders());
+    if (response.statusCode == HttpStatus.ok) {
+      return Paginable<Queue>.readJson(
+          json.decode(response.body), (item) => Queue.readJson(item));
+    } else {
+      throw "Unexpected status code : ${response.statusCode}";
+    }
+  }
+
   Future<Queue> fetchQueue(String id) async {
     assert(isUsable());
 
