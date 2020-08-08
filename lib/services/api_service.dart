@@ -47,7 +47,7 @@ class APIService {
         Uri.https(config.host, '${config.path}$prefix/rt'),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
-      return RTSystemInfo.readJSON(json.decode(response.body));
+      return RTSystemInfo.readJson(json.decode(response.body));
     } else {
       throw "Unexpected status code : ${response.statusCode}";
     }
@@ -60,7 +60,7 @@ class APIService {
         Uri.https(config.host, '${config.path}$prefix/queue/$id'),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
-      return Queue.readJSON(json.decode(response.body));
+      return Queue.readJson(json.decode(response.body));
     } else {
       throw "Unexpected status code : ${response.statusCode}";
     }

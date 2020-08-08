@@ -7,7 +7,7 @@ class Queue extends BaseModel {
   String description;
   String correspondAddress;
 
-  Queue.readJSON(Map<String, dynamic> json) {
+  Queue.readJson(Map<String, dynamic> json) {
     id = json["id"];
     type = json["type"];
     name = json["Name"];
