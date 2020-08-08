@@ -10,7 +10,7 @@ import 'package:rt_flutter/models/rt_systeminfo_model.dart';
 class APIService {
   APIService._instantiate();
   static final APIService instance = APIService._instantiate();
-  static const URIPrefix = "/REST/2.0";
+  static const prefix = "/REST/2.0";
 
   APIConfig config;
 
@@ -22,7 +22,7 @@ class APIService {
     assert(config != null && config.isConnectable());
 
     var response =
-        await http.get(Uri.https(config.host, '${config.path}$URIPrefix/rt'));
+        await http.get(Uri.https(config.host, '${config.path}$prefix/rt'));
     if (response.statusCode == HttpStatus.unauthorized) {
       if (json.decode(response.body)['message'] == 'Unauthorized') {
         return true;
@@ -44,7 +44,7 @@ class APIService {
     assert(isUsable());
 
     var response = await http.get(
-        Uri.https(config.host, '${config.path}$URIPrefix/rt'),
+        Uri.https(config.host, '${config.path}$prefix/rt'),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return RTSystemInfo.readJSON(json.decode(response.body));
@@ -57,7 +57,7 @@ class APIService {
     assert(isUsable());
 
     var response = await http.get(
-        Uri.https(config.host, '${config.path}$URIPrefix/queue/$id'),
+        Uri.https(config.host, '${config.path}$prefix/queue/$id'),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Queue.readJSON(json.decode(response.body));
