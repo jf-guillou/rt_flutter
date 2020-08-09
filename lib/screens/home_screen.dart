@@ -39,14 +39,14 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text("RT"),
         actions: [
-          PopupMenuButton<Queue>(
-            onSelected: (Queue q) {
-              Provider.of<AppState>(context, listen: false).currentQueue = q.id;
+          PopupMenuButton<String>(
+            onSelected: (String id) {
+              Provider.of<AppState>(context, listen: false).currentQueue = id;
             },
             itemBuilder: (BuildContext context) =>
-                _queues.items.map<PopupMenuItem<Queue>>((q) {
-              return PopupMenuItem<Queue>(
-                value: q,
+                _queues.items.map<PopupMenuItem<String>>((q) {
+              return PopupMenuItem<String>(
+                value: q.id,
                 child: Text(q.name),
               );
             }).toList(),
