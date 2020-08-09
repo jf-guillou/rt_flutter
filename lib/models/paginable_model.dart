@@ -8,7 +8,7 @@ class Paginable<T extends BaseModel> extends BaseModel {
   int page;
   int pages;
   int perPage;
-  List<BaseModel> items;
+  List<T> items;
 
   Paginable.readJson(Map<String, dynamic> json, Itemizer<T> itemizer) {
     total = json['total'];
