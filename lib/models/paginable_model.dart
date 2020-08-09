@@ -29,4 +29,12 @@ class Paginable<T extends ItemModel> extends BaseModel {
   T getElementById(String id) {
     return items.firstWhere((q) => q.id == id, orElse: () => null);
   }
+
+  void mergeWith(Paginable<T> p) {
+    total = p.total;
+    count += p.count;
+    page = p.page;
+    pages = p.pages;
+    items.addAll(p.items);
+  }
 }

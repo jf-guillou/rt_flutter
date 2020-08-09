@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _getTickets();
   }
 
-  _getQueues() async {
+  Future<void> _getQueues() async {
     var queues = await APIService.instance.fetchQueues();
     var provider = Provider.of<AppState>(context, listen: false);
     if (queues.getElementById(provider.currentQueue) == null) {
@@ -38,14 +38,18 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  _getTickets() async {
+  Future<void> _getTickets({bool merge = false}) async {
     setState(() {
       _tickets = null;
     });
     var tickets = await APIService.instance.fetchTickets(
         Provider.of<AppState>(context, listen: false).currentQueue);
     setState(() {
-      _tickets = tickets;
+      if (merge) {
+        _tickets.mergeWith(tickets);
+      } else {
+        _tickets = tickets;
+      }
     });
   }
 
@@ -120,18 +124,23 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         body: _tickets != null
-            ? CustomScrollView(slivers: <Widget>[
-                SliverFixedExtentList(
-                  itemExtent: 80.0,
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      return index < _tickets.count
-                          ? TicketListItem(_tickets.items.elementAt(index))
-                          : null;
-                    },
-                  ),
+            ? RefreshIndicator(
+                child: CustomScrollView(
+                  slivers: <Widget>[
+                    SliverFixedExtentList(
+                      itemExtent: 80.0,
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          return index < _tickets.count
+                              ? TicketListItem(_tickets.items.elementAt(index))
+                              : null;
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ])
+                onRefresh: _getTickets,
+              )
             : Center(
                 child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
