@@ -12,6 +12,8 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+enum MenuItem { queues, help }
+
 class _HomeScreenState extends State<HomeScreen> {
   Paginable<Queue> _queues;
 
@@ -39,17 +41,54 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text("RT"),
         actions: [
-          PopupMenuButton<String>(
-            onSelected: (String id) {
-              Provider.of<AppState>(context, listen: false).currentQueue = id;
+          PopupMenuButton<MenuItem>(
+            onSelected: (MenuItem item) {
+              switch (item) {
+                case MenuItem.queues:
+                  showModalBottomSheet<void>(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (BuildContext context) {
+                      return Container(
+                        height: 200,
+                        color: Theme.of(context).colorScheme.background,
+                        child: ListView.builder(
+                          itemCount: _queues.count,
+                          itemBuilder: (BuildContext context, int index) {
+                            final q = _queues.items[index];
+                            return ListTile(
+                                leading: Container(
+                                  padding: EdgeInsets.symmetric(vertical: 12),
+                                  child: Consumer<AppState>(
+                                      builder: (context, state, child) {
+                                    return Icon(state.currentQueue == q.id
+                                        ? Icons.radio_button_checked
+                                        : Icons.radio_button_unchecked);
+                                  }),
+                                ),
+                                title: Text(q.name),
+                                subtitle: Text(q.description),
+                                onTap: () {
+                                  Provider.of<AppState>(context, listen: false)
+                                      .currentQueue = q.id;
+                                  Navigator.pop(context);
+                                });
+                          },
+                        ),
+                      );
+                    },
+                  );
+                  break;
+                case MenuItem.help:
+                  break;
+              }
             },
-            itemBuilder: (BuildContext context) =>
-                _queues.items.map<PopupMenuItem<String>>((q) {
-              return PopupMenuItem<String>(
-                value: q.id,
-                child: Text(q.name),
-              );
-            }).toList(),
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
+              const PopupMenuItem<MenuItem>(
+                value: MenuItem.queues,
+                child: Text("Queues"),
+              )
+            ],
           ),
         ],
       ),
