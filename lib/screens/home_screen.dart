@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rt_flutter/components/ticket_listitem.dart';
 import 'package:rt_flutter/models/appstate_model.dart';
 import 'package:rt_flutter/models/paginable_model.dart';
 import 'package:rt_flutter/models/queue_model.dart';
@@ -38,6 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _getTickets() async {
+    setState(() {
+      _tickets = null;
+    });
     var tickets = await APIService.instance.fetchTickets(
         Provider.of<AppState>(context, listen: false).currentQueue);
     setState(() {
@@ -50,90 +54,88 @@ class _HomeScreenState extends State<HomeScreen> {
     _getTickets();
   }
 
+  queuePickerModalScreen() {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return Container(
+          height: 200,
+          color: Theme.of(context).colorScheme.background,
+          child: ListView.builder(
+            itemCount: _queues.count,
+            itemBuilder: (BuildContext context, int index) {
+              final q = _queues.items[index];
+              return ListTile(
+                  leading: Container(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    child: Consumer<AppState>(builder: (context, state, child) {
+                      return Icon(state.currentQueue == q.id
+                          ? Icons.radio_button_checked
+                          : Icons.radio_button_unchecked);
+                    }),
+                  ),
+                  title: Text(q.name),
+                  subtitle: Text(q.description),
+                  onTap: () {
+                    _setCurrentQueue(q.id);
+                    Navigator.pop(context);
+                  });
+            },
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
-      appBar: AppBar(
-        title: Text("RT"),
-        actions: [
-          PopupMenuButton<MenuItem>(
-            onSelected: (MenuItem item) {
-              switch (item) {
-                case MenuItem.queues:
-                  showModalBottomSheet<void>(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (BuildContext context) {
-                      return Container(
-                        height: 200,
-                        color: Theme.of(context).colorScheme.background,
-                        child: ListView.builder(
-                          itemCount: _queues.count,
-                          itemBuilder: (BuildContext context, int index) {
-                            final q = _queues.items[index];
-                            return ListTile(
-                                leading: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 12),
-                                  child: Consumer<AppState>(
-                                      builder: (context, state, child) {
-                                    return Icon(state.currentQueue == q.id
-                                        ? Icons.radio_button_checked
-                                        : Icons.radio_button_unchecked);
-                                  }),
-                                ),
-                                title: Text(q.name),
-                                subtitle: Text(q.description),
-                                onTap: () {
-                                  _setCurrentQueue(q.id);
-                                  Navigator.pop(context);
-                                });
-                          },
-                        ),
-                      );
-                    },
-                  );
-                  break;
-                case MenuItem.help:
-                  break;
-              }
+        key: scaffoldKey,
+        appBar: AppBar(
+          title: Consumer<AppState>(
+            builder: (context, state, child) {
+              var queueName = _queues?.getElementById(state.currentQueue)?.name;
+              return queueName != null ? Text("RT - $queueName") : Text("RT");
             },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
-              const PopupMenuItem<MenuItem>(
-                value: MenuItem.queues,
-                child: Text("Queues"),
-              )
-            ],
           ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text("HomeScreen"),
-            Consumer<AppState>(
-              builder: (context, state, child) {
-                return _queues != null
-                    ? Text(
-                        "Current queue : ${_queues.getElementById(state.currentQueue)?.name}")
-                    : Text("Current queue : ${state.currentQueue}");
+          actions: [
+            PopupMenuButton<MenuItem>(
+              onSelected: (MenuItem item) {
+                switch (item) {
+                  case MenuItem.queues:
+                    queuePickerModalScreen();
+                    break;
+                  case MenuItem.help:
+                    break;
+                }
               },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
+                const PopupMenuItem<MenuItem>(
+                  value: MenuItem.queues,
+                  child: Text("Queues"),
+                )
+              ],
             ),
-            _tickets != null
-                ? Text("Got ${_tickets.total} tickets")
-                : Text("No tickets"),
           ],
         ),
-      ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () => {
-      //     scaffoldKey.currentState
-      //         .showSnackBar(SnackBar(content: Text('Showing Snackbar')))
-      //   },
-      //   tooltip: 'Increment',
-      //   child: Icon(Icons.network_check),
-      // ),
-    );
+        body: _tickets != null
+            ? CustomScrollView(slivers: <Widget>[
+                SliverFixedExtentList(
+                  itemExtent: 80.0,
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      return index < _tickets.count
+                          ? TicketListItem(_tickets.items.elementAt(index))
+                          : null;
+                    },
+                  ),
+                ),
+              ])
+            : Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
+                ),
+              ));
   }
 }

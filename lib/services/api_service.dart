@@ -87,7 +87,7 @@ class APIService {
 
     var response = await http.get(
         Uri.https(config.host, '${config.path}$prefix/tickets',
-            {"query": "Queue=$queueId"}),
+            {"query": "Queue=$queueId", "fields": "Subject"}),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Paginable<Ticket>.readJson(
