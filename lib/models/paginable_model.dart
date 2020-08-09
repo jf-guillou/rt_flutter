@@ -12,6 +12,8 @@ class Paginable<T extends ItemModel> extends BaseModel {
   List<T> items;
 
   Paginable.readJson(Map<String, dynamic> json, Itemizer<T> itemizer) {
+    assert(json != null);
+
     total = json['total'];
     count = json['count'];
     page = json['page'];
