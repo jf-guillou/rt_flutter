@@ -24,6 +24,6 @@ class Paginable<T extends BaseModel> extends BaseModel {
   }
 
   T getElementById(String id) {
-    return items.firstWhere((q) => q.id == id);
+    return items.firstWhere((q) => q.id == id, orElse: () => null);
   }
 }

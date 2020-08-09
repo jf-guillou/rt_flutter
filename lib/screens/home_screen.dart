@@ -23,6 +23,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _getQueues() async {
     var queues = await APIService.instance.fetchQueues();
+    var provider = Provider.of<AppState>(context, listen: false);
+    if (queues.getElementById(provider.currentQueue) == null) {
+      provider.currentQueue = queues.items.first.id;
+    }
     setState(() {
       _queues = queues;
     });
@@ -58,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, state, child) {
                 return _queues != null
                     ? Text(
-                        "Current queue : ${_queues.getElementById(state.currentQueue).name}")
+                        "Current queue : ${_queues.getElementById(state.currentQueue)?.name}")
                     : Text("Current queue : ${state.currentQueue}");
               },
             )
