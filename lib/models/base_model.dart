@@ -1,4 +1,6 @@
 class BaseModel {
-  const BaseModel();
-  const BaseModel.readJson(Map<String, dynamic> json);
+  String id;
+
+  BaseModel();
+  BaseModel.readJson(Map<String, dynamic> json);
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rt_flutter/models/appstate_model.dart';
 import 'package:rt_flutter/screens/splash_screen.dart';
 
 void main() {
-  runApp(RT());
+  runApp(ChangeNotifierProvider(create: (context) => AppState(), child: RT()));
 }
 
 class RT extends StatelessWidget {
