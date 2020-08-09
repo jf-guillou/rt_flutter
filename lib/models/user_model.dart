@@ -8,4 +8,19 @@ class User extends ItemModel {
 
     realName = json["RealName"];
   }
+
+  static List<User> readJsonList(List<dynamic> json) {
+    if (json == null) return null;
+
+    List<User> _users = List();
+    for (var i in json) {
+      _users.add(User.readJson(i));
+    }
+    return _users;
+  }
+
+  @override
+  String toString() {
+    return "$realName ($id)";
+  }
 }

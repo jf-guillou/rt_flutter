@@ -8,7 +8,9 @@ class Ticket extends ItemModel {
   String priority;
   DateTime created;
   User creator;
-  User requestor;
+  List<User> requestors;
+  List<User> cc;
+  List<User> adminCc;
   User owner;
   Queue queue;
   DateTime lastUpdated;
@@ -22,7 +24,7 @@ class Ticket extends ItemModel {
     priority = json["Priority"];
     created = super.parseDate(json["Created"]);
     creator = User.readJson(json["Creator"]);
-    requestor = User.readJson(json["Requestor"]);
+    requestors = User.readJsonList(json["Requestor"]);
     owner = User.readJson(json["Owner"]);
     queue = Queue.readJson(json["Queue"]);
     lastUpdated = super.parseDate(json["LastUpdated"]);
