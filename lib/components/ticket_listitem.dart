@@ -8,17 +8,13 @@ class TicketListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => TicketScreen(t.id)));
-        },
-        child: Container(
-            child: Column(
-          children: [
-            Row(children: [Text("#${t.id}")]),
-            Text(t.subject ?? "${t.id}"),
-          ],
-        )));
+    return ListTile(
+      onTap: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => TicketScreen(t.id)));
+      },
+      title: Text("#${t.id}"),
+      subtitle: Text(t.subject),
+    );
   }
 }
