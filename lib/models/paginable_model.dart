@@ -1,8 +1,9 @@
 import 'package:rt_flutter/models/base_model.dart';
+import 'package:rt_flutter/models/item_model.dart';
 
 typedef S Itemizer<S>(Map<String, dynamic> item);
 
-class Paginable<T extends BaseModel> extends BaseModel {
+class Paginable<T extends ItemModel> extends BaseModel {
   int total;
   int count;
   int page;

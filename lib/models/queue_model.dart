@@ -1,6 +1,6 @@
-import 'package:rt_flutter/models/base_model.dart';
+import 'package:rt_flutter/models/item_model.dart';
 
-class Queue extends BaseModel {
+class Queue extends ItemModel {
   String id;
   String type;
   String name;

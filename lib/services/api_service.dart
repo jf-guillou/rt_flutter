@@ -6,6 +6,7 @@ import 'package:rt_flutter/models/api_config_model.dart';
 import 'package:rt_flutter/models/paginable_model.dart';
 import 'package:rt_flutter/models/queue_model.dart';
 import 'package:rt_flutter/models/rt_systeminfo_model.dart';
+import 'package:rt_flutter/models/ticket_model.dart';
 
 class APIService {
   APIService._instantiate();
@@ -76,6 +77,34 @@ class APIService {
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Queue.readJson(json.decode(response.body));
+    } else {
+      throw "Unexpected status code : ${response.statusCode}";
+    }
+  }
+
+  Future<Paginable<Ticket>> fetchTickets(String queueId) async {
+    assert(isUsable());
+
+    var response = await http.get(
+        Uri.https(config.host, '${config.path}$prefix/tickets',
+            {"query": "Queue=$queueId"}),
+        headers: baseHeaders());
+    if (response.statusCode == HttpStatus.ok) {
+      return Paginable<Ticket>.readJson(
+          json.decode(response.body), (item) => Ticket.readJson(item));
+    } else {
+      throw "Unexpected status code : ${response.statusCode}";
+    }
+  }
+
+  Future<Ticket> fetchTicket(String id) async {
+    assert(isUsable());
+
+    var response = await http.get(
+        Uri.https(config.host, '${config.path}$prefix/ticket/$id'),
+        headers: baseHeaders());
+    if (response.statusCode == HttpStatus.ok) {
+      return Ticket.readJson(json.decode(response.body));
     } else {
       throw "Unexpected status code : ${response.statusCode}";
     }

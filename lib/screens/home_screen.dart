@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rt_flutter/models/appstate_model.dart';
 import 'package:rt_flutter/models/paginable_model.dart';
 import 'package:rt_flutter/models/queue_model.dart';
+import 'package:rt_flutter/models/ticket_model.dart';
 import 'package:rt_flutter/services/api_service.dart';
 
 final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -16,11 +17,13 @@ enum MenuItem { queues, help }
 
 class _HomeScreenState extends State<HomeScreen> {
   Paginable<Queue> _queues;
+  Paginable<Ticket> _tickets;
 
   @override
   void initState() {
     super.initState();
     _getQueues();
+    _getTickets();
   }
 
   _getQueues() async {
@@ -32,6 +35,19 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _queues = queues;
     });
+  }
+
+  _getTickets() async {
+    var tickets = await APIService.instance.fetchTickets(
+        Provider.of<AppState>(context, listen: false).currentQueue);
+    setState(() {
+      _tickets = tickets;
+    });
+  }
+
+  _setCurrentQueue(String id) {
+    Provider.of<AppState>(context, listen: false).currentQueue = id;
+    _getTickets();
   }
 
   @override
@@ -69,8 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 title: Text(q.name),
                                 subtitle: Text(q.description),
                                 onTap: () {
-                                  Provider.of<AppState>(context, listen: false)
-                                      .currentQueue = q.id;
+                                  _setCurrentQueue(q.id);
                                   Navigator.pop(context);
                                 });
                           },
@@ -104,7 +119,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         "Current queue : ${_queues.getElementById(state.currentQueue)?.name}")
                     : Text("Current queue : ${state.currentQueue}");
               },
-            )
+            ),
+            _tickets != null
+                ? Text("Got ${_tickets.total} tickets")
+                : Text("No tickets"),
           ],
         ),
       ),
