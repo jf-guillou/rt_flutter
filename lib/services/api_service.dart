@@ -82,12 +82,13 @@ class APIService {
     }
   }
 
-  Future<Paginable<Ticket>> fetchTickets(String queueId) async {
+  Future<Paginable<Ticket>> fetchTickets(String queueId, {int page: 1}) async {
     assert(isUsable());
 
     var response = await http.get(
         Uri.https(config.host, '${config.path}$prefix/tickets', {
           "query": "Queue=$queueId",
+          "page": "$page",
           "fields": "Subject",
           "orderby": "id",
           "order": "desc"

@@ -19,12 +19,19 @@ enum MenuItem { queues, help }
 class _HomeScreenState extends State<HomeScreen> {
   Paginable<Queue> _queues;
   Paginable<Ticket> _tickets;
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _getQueues();
     _getTickets();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _appendTickets();
+      }
+    });
   }
 
   Future<void> _getQueues() async {
@@ -38,18 +45,23 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> _getTickets({bool merge = false}) async {
+  Future<void> _getTickets() async {
     setState(() {
       _tickets = null;
     });
-    var tickets = await APIService.instance.fetchTickets(
-        Provider.of<AppState>(context, listen: false).currentQueue);
+    var provider = Provider.of<AppState>(context, listen: false);
+    var tickets = await APIService.instance.fetchTickets(provider.currentQueue);
     setState(() {
-      if (merge) {
-        _tickets.mergeWith(tickets);
-      } else {
-        _tickets = tickets;
-      }
+      _tickets = tickets;
+    });
+  }
+
+  Future<void> _appendTickets() async {
+    var provider = Provider.of<AppState>(context, listen: false);
+    var tickets = await APIService.instance
+        .fetchTickets(provider.currentQueue, page: _tickets.page + 1);
+    setState(() {
+      _tickets.mergeWith(tickets);
     });
   }
 
@@ -126,6 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: _tickets != null
             ? RefreshIndicator(
                 child: CustomScrollView(
+                  controller: _scrollController,
                   slivers: <Widget>[
                     SliverFixedExtentList(
                       itemExtent: 80.0,
