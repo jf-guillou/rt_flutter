@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:rt_flutter/models/api_config_model.dart';
+import 'package:rt_flutter/models/attachment_model.dart';
 import 'package:rt_flutter/models/paginable_model.dart';
 import 'package:rt_flutter/models/queue_model.dart';
 import 'package:rt_flutter/models/rt_systeminfo_model.dart';
@@ -126,6 +127,19 @@ class APIService {
     if (response.statusCode == HttpStatus.ok) {
       return Paginable<Transaction>.readJson(
           json.decode(response.body), (item) => Transaction.readJson(item));
+    } else {
+      throw 'Unexpected status code : ${response.statusCode}';
+    }
+  }
+
+  Future<Attachment> fetchAttachment(String id) async {
+    assert(isUsable());
+
+    var response = await http.get(
+        Uri.https(config.host, '${config.path}$prefix/attachment/$id'),
+        headers: baseHeaders());
+    if (response.statusCode == HttpStatus.ok) {
+      return Attachment.readJson(json.decode(response.body));
     } else {
       throw 'Unexpected status code : ${response.statusCode}';
     }
