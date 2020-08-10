@@ -21,28 +21,28 @@ class APIConfig {
   }
 
   void setUrl(String url) {
-    if (url.startsWith("http://")) {
-      throw "Non-https urls are unsupported";
+    if (url.startsWith('http://')) {
+      throw 'Non-https urls are unsupported';
     }
 
     // Cleanup https://
-    if (url.startsWith("https://")) {
-      url = url.replaceFirst("https://", "");
+    if (url.startsWith('https://')) {
+      url = url.replaceFirst('https://', '');
     }
 
-    if (url.contains("/")) {
-      var parts = url.split("/");
+    if (url.contains('/')) {
+      var parts = url.split('/');
       host = parts.removeAt(0);
-      // Remove trailing "/"
-      parts.remove("");
-      path = parts.join("/");
+      // Remove trailing '/'
+      parts.remove('');
+      path = parts.join('/');
     } else {
       host = url;
     }
   }
 
   void setCredentials(String username, String password) {
-    _authBasic = base64.encode(utf8.encode("$username:$password"));
+    _authBasic = base64.encode(utf8.encode('$username:$password'));
     _authToken = null;
   }
 
@@ -53,9 +53,9 @@ class APIConfig {
 
   String authorizationHeader() {
     if (!canAuth()) {
-      throw "APIConfig is missing either username & password or auth token";
+      throw 'APIConfig is missing either username & password or auth token';
     }
 
-    return _authToken != null ? "token $_authToken" : "basic $_authBasic";
+    return _authToken != null ? 'token $_authToken' : 'basic $_authBasic';
   }
 }

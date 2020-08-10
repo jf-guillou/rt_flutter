@@ -22,7 +22,7 @@ class SplashScreenState extends State<SplashScreen> {
 
   _initAPIConfig() {
     APIService.instance.config = APIConfig()
-      ..setUrl("https://snps.univ-nantes.fr/rt")
+      ..setUrl('https://snps.univ-nantes.fr/rt')
       ..setAuthToken(RTAPIKey);
 
     assert(APIService.instance.isUsable());
@@ -32,7 +32,7 @@ class SplashScreenState extends State<SplashScreen> {
     try {
       var rt = await APIService.instance.fetchRTSystemInfo();
       if (!rt.isValid()) {
-        throw Exception("Unexpected RT version : ${rt.version}");
+        throw Exception('Unexpected RT version : ${rt.version}');
       }
 
       Navigator.of(context).pushReplacement(
@@ -52,7 +52,7 @@ class SplashScreenState extends State<SplashScreen> {
         children: [
           Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text("R|T",
+              child: Text('R|T',
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.secondary,
                       decoration: TextDecoration.none))),

@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
           title: Consumer<AppState>(
             builder: (context, state, child) {
               var queueName = _queues?.getElementById(state.currentQueue)?.name;
-              return queueName != null ? Text("RT - $queueName") : Text("RT");
+              return queueName != null ? Text('RT - $queueName') : Text('RT');
             },
           ),
           actions: [
@@ -134,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
               itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
                 const PopupMenuItem<MenuItem>(
                   value: MenuItem.queues,
-                  child: Text("Queues"),
+                  child: Text('Queues'),
                 )
               ],
             ),

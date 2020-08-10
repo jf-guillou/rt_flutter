@@ -13,7 +13,7 @@ class TicketListItem extends StatelessWidget {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => TicketScreen(t.id)));
       },
-      title: Text("#${t.id}"),
+      title: Text('#${t.id}'),
       subtitle: Text(t.subject),
       isThreeLine: true,
     );

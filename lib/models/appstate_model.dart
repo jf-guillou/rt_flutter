@@ -10,17 +10,17 @@ class AppState extends ChangeNotifier {
 
   _loadState() async {
     var prefs = await SharedPreferences.getInstance();
-    _currentQueueId = prefs.getString("current_queue");
-    print("AppState:_loadState:_currentQueueId:$_currentQueueId");
+    _currentQueueId = prefs.getString('current_queue');
+    print('AppState:_loadState:_currentQueueId:$_currentQueueId');
     notifyListeners();
   }
 
   set currentQueue(String id) {
     _currentQueueId = id;
     notifyListeners();
-    print("AppState:_loadState:_currentQueueId:$_currentQueueId");
+    print('AppState:_loadState:_currentQueueId:$_currentQueueId');
     SharedPreferences.getInstance()
-        .then((prefs) => prefs.setString("current_queue", id));
+        .then((prefs) => prefs.setString('current_queue', id));
   }
 
   get currentQueue => _currentQueueId;

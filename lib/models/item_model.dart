@@ -7,8 +7,8 @@ class ItemModel extends BaseModel {
   ItemModel.readJson(Map<String, dynamic> json) {
     if (json == null) return;
 
-    id = json["id"] is int ? json["id"].toString() : json["id"];
-    type = json["type"];
+    id = json['id'] is int ? json['id'].toString() : json['id'];
+    type = json['type'];
   }
 
   DateTime parseDate(String datetime) {

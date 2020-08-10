@@ -6,7 +6,7 @@ class User extends ItemModel {
   User.readJson(Map<String, dynamic> json) : super.readJson(json) {
     if (json == null) return;
 
-    realName = json["RealName"];
+    realName = json['RealName'];
   }
 
   static List<User> readJsonList(List<dynamic> json) {
@@ -21,6 +21,6 @@ class User extends ItemModel {
 
   @override
   String toString() {
-    return "$realName ($id)";
+    return '$realName ($id)';
   }
 }

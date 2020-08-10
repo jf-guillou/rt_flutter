@@ -8,8 +8,8 @@ class Queue extends ItemModel {
   Queue.readJson(Map<String, dynamic> json) : super.readJson(json) {
     if (json == null) return;
 
-    name = json["Name"];
-    description = json["Description"];
-    correspondAddress = json["CorrespondAddress"];
+    name = json['Name'];
+    description = json['Description'];
+    correspondAddress = json['CorrespondAddress'];
   }
 }

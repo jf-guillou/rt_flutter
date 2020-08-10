@@ -50,34 +50,39 @@ class _TicketScreenState extends State<TicketScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("#$id")),
+      appBar: AppBar(title: Text('#$id')),
       body: _ticket != null
           ? Column(children: [
-              Text(_ticket.subject, style: TextStyle(fontSize: 20)),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(_ticket.subject, style: TextStyle(fontSize: 20)),
+              ),
               Text(df.format(_ticket.created)),
               Text(_ticket.creator.id),
-              // _transactions != null
-              //     ? CustomScrollView(
-              //         slivers: <Widget>[
-              //           SliverFixedExtentList(
-              //             itemExtent: 80.0,
-              //             delegate: SliverChildBuilderDelegate(
-              //               (BuildContext context, int index) {
-              //                 return index < _transactions.count
-              //                     ? TransactionListItem(
-              //                         _transactions.items.elementAt(index))
-              //                     : null;
-              //               },
-              //             ),
-              //           ),
-              //         ],
-              //       )
-              //     : Center(
-              //         child: CircularProgressIndicator(
-              //           valueColor:
-              //               AlwaysStoppedAnimation<Color>(Colors.redAccent),
-              //         ),
-              //       ),
+              _transactions != null
+                  ? Expanded(
+                      child: CustomScrollView(
+                        slivers: <Widget>[
+                          SliverFixedExtentList(
+                            itemExtent: 80.0,
+                            delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                                return index < _transactions.count
+                                    ? TransactionListItem(
+                                        _transactions.items.elementAt(index))
+                                    : null;
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Center(
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Colors.redAccent),
+                      ),
+                    ),
             ])
           : Center(
               child: CircularProgressIndicator(

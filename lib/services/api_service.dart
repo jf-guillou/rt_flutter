@@ -12,7 +12,7 @@ import 'package:rt_flutter/models/transaction_model.dart';
 class APIService {
   APIService._instantiate();
   static final APIService instance = APIService._instantiate();
-  static const prefix = "/REST/2.0";
+  static const prefix = '/REST/2.0';
 
   APIConfig config;
 
@@ -51,7 +51,7 @@ class APIService {
     if (response.statusCode == HttpStatus.ok) {
       return RTSystemInfo.readJson(json.decode(response.body));
     } else {
-      throw "Unexpected status code : ${response.statusCode}";
+      throw 'Unexpected status code : ${response.statusCode}';
     }
   }
 
@@ -60,13 +60,13 @@ class APIService {
 
     var response = await http.get(
         Uri.https(config.host, '${config.path}$prefix/queues/all',
-            {"fields": "Name,Description"}),
+            {'fields': 'Name,Description'}),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Paginable<Queue>.readJson(
           json.decode(response.body), (item) => Queue.readJson(item));
     } else {
-      throw "Unexpected status code : ${response.statusCode}";
+      throw 'Unexpected status code : ${response.statusCode}';
     }
   }
 
@@ -79,7 +79,7 @@ class APIService {
     if (response.statusCode == HttpStatus.ok) {
       return Queue.readJson(json.decode(response.body));
     } else {
-      throw "Unexpected status code : ${response.statusCode}";
+      throw 'Unexpected status code : ${response.statusCode}';
     }
   }
 
@@ -88,18 +88,18 @@ class APIService {
 
     var response = await http.get(
         Uri.https(config.host, '${config.path}$prefix/tickets', {
-          "query": "Queue=$queueId",
-          "page": "$page",
-          "fields": "Subject",
-          "orderby": "id",
-          "order": "desc"
+          'query': 'Queue=$queueId',
+          'page': '$page',
+          'fields': 'Subject',
+          'orderby': 'id',
+          'order': 'desc'
         }),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Paginable<Ticket>.readJson(
           json.decode(response.body), (item) => Ticket.readJson(item));
     } else {
-      throw "Unexpected status code : ${response.statusCode}";
+      throw 'Unexpected status code : ${response.statusCode}';
     }
   }
 
@@ -112,7 +112,7 @@ class APIService {
     if (response.statusCode == HttpStatus.ok) {
       return Ticket.readJson(json.decode(response.body));
     } else {
-      throw "Unexpected status code : ${response.statusCode}";
+      throw 'Unexpected status code : ${response.statusCode}';
     }
   }
 
@@ -126,7 +126,7 @@ class APIService {
       return Paginable<Transaction>.readJson(
           json.decode(response.body), (item) => Transaction.readJson(item));
     } else {
-      throw "Unexpected status code : ${response.statusCode}";
+      throw 'Unexpected status code : ${response.statusCode}';
     }
   }
 }

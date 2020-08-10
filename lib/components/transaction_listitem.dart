@@ -8,7 +8,7 @@ class TransactionListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text("#${t.id}"),
+      title: Text('#${t.id}'),
     );
   }
 }
