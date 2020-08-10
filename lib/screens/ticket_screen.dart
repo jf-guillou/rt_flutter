@@ -18,7 +18,7 @@ class _TicketScreenState extends State<TicketScreen> {
   final String id;
   Ticket _ticket;
   Paginable<Transaction> _transactions;
-  DateFormat df = DateFormat('dd/MM/y H:m');
+  DateFormat df = DateFormat('dd/MM/y HH:mm');
 
   _TicketScreenState(this.id);
 
@@ -57,8 +57,16 @@ class _TicketScreenState extends State<TicketScreen> {
                 padding: const EdgeInsets.all(12.0),
                 child: Text(_ticket.subject, style: TextStyle(fontSize: 20)),
               ),
-              Text(df.format(_ticket.created)),
-              Text(_ticket.creator.id),
+              Text('State: ${_ticket.status}'),
+              Text('Created: ${df.format(_ticket.created)}'),
+              Text('LastUpdate: ${df.format(_ticket.lastUpdated)}'),
+              // Text('Creator: ${_ticket.creator.id}'),
+              for (var u in _ticket.requestors) Text('Requestor: ${u.id}'),
+              for (var u in _ticket.cc) Text('CC: ${u.id}'),
+              for (var u in _ticket.adminCc) Text('AdminCC: ${u.id}'),
+              Text('Owner: ${_ticket.owner.id}'),
+              for (var cf in _ticket.customFields)
+                Text('CF[${cf.name}]: ${cf.values}'),
               _transactions != null
                   ? Expanded(
                       child: CustomScrollView(

@@ -120,7 +120,8 @@ class APIService {
     assert(isUsable());
 
     var response = await http.get(
-        Uri.https(config.host, '${config.path}$prefix/ticket/$id/history'),
+        Uri.https(config.host, '${config.path}$prefix/ticket/$id/history',
+            {'fields': 'Type,Data'}),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Paginable<Transaction>.readJson(

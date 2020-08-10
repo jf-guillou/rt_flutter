@@ -12,11 +12,11 @@ class User extends ItemModel {
   static List<User> readJsonList(List<dynamic> json) {
     if (json == null) return null;
 
-    List<User> _users = List();
+    List<User> _items = List();
     for (var i in json) {
-      _users.add(User.readJson(i));
+      _items.add(User.readJson(i));
     }
-    return _users;
+    return _items;
   }
 
   @override

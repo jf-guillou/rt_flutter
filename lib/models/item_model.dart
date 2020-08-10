@@ -11,6 +11,16 @@ class ItemModel extends BaseModel {
     type = json['type'];
   }
 
+  static List<ItemModel> readJsonList(List<dynamic> json) {
+    if (json == null) return null;
+
+    List<ItemModel> _items = List();
+    for (var i in json) {
+      _items.add(ItemModel.readJson(i));
+    }
+    return _items;
+  }
+
   DateTime parseDate(String datetime) {
     if (datetime == null) return null;
 
