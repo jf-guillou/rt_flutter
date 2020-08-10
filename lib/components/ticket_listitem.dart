@@ -4,7 +4,7 @@ import 'package:rt_flutter/screens/ticket_screen.dart';
 
 class TicketListItem extends StatelessWidget {
   final Ticket t;
-  TicketListItem(this.t);
+  const TicketListItem(this.t, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

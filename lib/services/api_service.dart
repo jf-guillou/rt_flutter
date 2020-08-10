@@ -7,6 +7,7 @@ import 'package:rt_flutter/models/paginable_model.dart';
 import 'package:rt_flutter/models/queue_model.dart';
 import 'package:rt_flutter/models/rt_systeminfo_model.dart';
 import 'package:rt_flutter/models/ticket_model.dart';
+import 'package:rt_flutter/models/transaction_model.dart';
 
 class APIService {
   APIService._instantiate();
@@ -110,6 +111,20 @@ class APIService {
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Ticket.readJson(json.decode(response.body));
+    } else {
+      throw "Unexpected status code : ${response.statusCode}";
+    }
+  }
+
+  Future<Paginable<Transaction>> fetchTransactions(String id) async {
+    assert(isUsable());
+
+    var response = await http.get(
+        Uri.https(config.host, '${config.path}$prefix/ticket/$id/history'),
+        headers: baseHeaders());
+    if (response.statusCode == HttpStatus.ok) {
+      return Paginable<Transaction>.readJson(
+          json.decode(response.body), (item) => Transaction.readJson(item));
     } else {
       throw "Unexpected status code : ${response.statusCode}";
     }
