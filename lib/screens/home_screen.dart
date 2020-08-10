@@ -76,8 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
       isScrollControlled: true,
       builder: (BuildContext context) {
         return Container(
-          height: 200,
-          color: Theme.of(context).colorScheme.background,
+          height: 240,
           child: ListView.builder(
             itemCount: _queues.count,
             itemBuilder: (BuildContext context, int index) {
