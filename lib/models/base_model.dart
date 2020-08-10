@@ -3,9 +3,14 @@ abstract class BaseModel {
   DateTime _createdAt;
   // TODO: Find out if we really need _updatedAt or only _createdAt
   DateTime _updatedAt;
+  Duration stalenessThreshold = Duration(hours: 1);
 
   BaseModel() {
     _createdAt = DateTime.now();
+  }
+
+  isStale() {
+    return modelAge().add(stalenessThreshold).isBefore(DateTime.now());
   }
 
   modelUpdated() {

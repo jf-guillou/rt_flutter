@@ -60,6 +60,7 @@ class APIService {
   Future<Queue> fetchQueue(String id) async {
     assert(isUsable());
 
+    print('fetchQueue:$id');
     var response = await http.get(
         Uri.https(config.host, '${config.path}$prefix/queue/$id'),
         headers: baseHeaders());
@@ -73,6 +74,7 @@ class APIService {
   Future<Paginable<Queue>> fetchQueues() async {
     assert(isUsable());
 
+    print('fetchQueues');
     var response = await http.get(
         Uri.https(config.host, '${config.path}$prefix/queues/all',
             {'fields': 'Name,Description'}),
@@ -88,6 +90,7 @@ class APIService {
   Future<RTSystemInfo> fetchRTSystemInfo() async {
     assert(isUsable());
 
+    print('fetchRTSystemInfo');
     var response = await http.get(
         Uri.https(config.host, '${config.path}$prefix/rt'),
         headers: baseHeaders());
@@ -101,6 +104,7 @@ class APIService {
   Future<Ticket> fetchTicket(String id) async {
     assert(isUsable());
 
+    print('fetchTicket:$id');
     var response = await http.get(
         Uri.https(config.host, '${config.path}$prefix/ticket/$id'),
         headers: baseHeaders());
@@ -114,6 +118,7 @@ class APIService {
   Future<Paginable<Ticket>> fetchTickets(String queueId, {int page: 1}) async {
     assert(isUsable());
 
+    print('fetchTickets:$queueId');
     var response = await http.get(
         Uri.https(config.host, '${config.path}$prefix/tickets', {
           'query': 'Queue=$queueId',
@@ -134,6 +139,7 @@ class APIService {
   Future<Transaction> fetchTransaction(String id) async {
     assert(isUsable());
 
+    print('fetchTransaction:$id');
     var response = await http.get(
         Uri.https(config.host, '${config.path}$prefix/transaction/$id'),
         headers: baseHeaders());
@@ -147,6 +153,7 @@ class APIService {
   Future<Paginable<Transaction>> fetchTransactions(String ticketId) async {
     assert(isUsable());
 
+    print('fetchTransactions:$ticketId');
     var response = await http.get(
         Uri.https(config.host, '${config.path}$prefix/ticket/$ticketId/history',
             {'fields': 'Type,Data'}),
@@ -162,6 +169,7 @@ class APIService {
   Future<User> fetchUser(String id) async {
     assert(isUsable());
 
+    print('fetchUser:$id');
     var response = await http.get(
         Uri.https(config.host, '${config.path}$prefix/transaction/$id'),
         headers: baseHeaders());
