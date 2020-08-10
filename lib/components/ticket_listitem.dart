@@ -15,6 +15,7 @@ class TicketListItem extends StatelessWidget {
       },
       title: Text("#${t.id}"),
       subtitle: Text(t.subject),
+      isThreeLine: true,
     );
   }
 }
