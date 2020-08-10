@@ -31,16 +31,20 @@ class _TicketScreenState extends State<TicketScreen> {
 
   _getTicket() async {
     var ticket = await APIService.instance.fetchTicket(id);
-    setState(() {
-      _ticket = ticket;
-    });
+    if (mounted) {
+      setState(() {
+        _ticket = ticket;
+      });
+    }
   }
 
   _getHistory() async {
     var transactions = await APIService.instance.fetchTransactions(id);
-    setState(() {
-      _transactions = transactions;
-    });
+    if (mounted) {
+      setState(() {
+        _transactions = transactions;
+      });
+    }
   }
 
   @override

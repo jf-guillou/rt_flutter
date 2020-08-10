@@ -40,9 +40,11 @@ class _HomeScreenState extends State<HomeScreen> {
     if (queues.getElementById(provider.currentQueue) == null) {
       provider.currentQueue = queues.items.first.id;
     }
-    setState(() {
-      _queues = queues;
-    });
+    if (mounted) {
+      setState(() {
+        _queues = queues;
+      });
+    }
   }
 
   Future<void> _getTickets() async {
@@ -51,18 +53,22 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     var provider = Provider.of<AppState>(context, listen: false);
     var tickets = await APIService.instance.fetchTickets(provider.currentQueue);
-    setState(() {
-      _tickets = tickets;
-    });
+    if (mounted) {
+      setState(() {
+        _tickets = tickets;
+      });
+    }
   }
 
   Future<void> _appendTickets() async {
     var provider = Provider.of<AppState>(context, listen: false);
     var tickets = await APIService.instance
         .fetchTickets(provider.currentQueue, page: _tickets.page + 1);
-    setState(() {
-      _tickets.mergeWith(tickets);
-    });
+    if (mounted) {
+      setState(() {
+        _tickets.mergeWith(tickets);
+      });
+    }
   }
 
   _setCurrentQueue(String id) {
