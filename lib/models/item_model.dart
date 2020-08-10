@@ -1,6 +1,7 @@
 import 'package:rt_flutter/models/base_model.dart';
 
-class ItemModel extends BaseModel {
+/// ItemModel is abstract class used by single item instances
+abstract class ItemModel extends BaseModel {
   String id;
   String type;
 
@@ -14,11 +15,14 @@ class ItemModel extends BaseModel {
   static List<ItemModel> readJsonList(List<dynamic> json) {
     if (json == null) return null;
 
-    List<ItemModel> _items = List();
-    for (var i in json) {
-      _items.add(ItemModel.readJson(i));
-    }
-    return _items;
+    // TODO: Find a way to properly instantiate child classes based on 'type'
+    throw UnimplementedError();
+
+    // List<ItemModel> _items = List();
+    // for (var i in json) {
+    //   _items.add(ItemModel.readJson(i));
+    // }
+    // return _items;
   }
 
   DateTime parseDate(String datetime) {

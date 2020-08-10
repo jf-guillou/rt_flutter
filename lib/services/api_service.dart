@@ -9,6 +9,7 @@ import 'package:rt_flutter/models/queue_model.dart';
 import 'package:rt_flutter/models/rt_systeminfo_model.dart';
 import 'package:rt_flutter/models/ticket_model.dart';
 import 'package:rt_flutter/models/transaction_model.dart';
+import 'package:rt_flutter/models/user_model.dart';
 
 class APIService {
   APIService._instantiate();
@@ -43,14 +44,27 @@ class APIService {
     };
   }
 
-  Future<RTSystemInfo> fetchRTSystemInfo() async {
+  Future<Attachment> fetchAttachment(String id) async {
     assert(isUsable());
 
     var response = await http.get(
-        Uri.https(config.host, '${config.path}$prefix/rt'),
+        Uri.https(config.host, '${config.path}$prefix/attachment/$id'),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
-      return RTSystemInfo.readJson(json.decode(response.body));
+      return Attachment.readJson(json.decode(response.body));
+    } else {
+      throw 'Unexpected status code : ${response.statusCode}';
+    }
+  }
+
+  Future<Queue> fetchQueue(String id) async {
+    assert(isUsable());
+
+    var response = await http.get(
+        Uri.https(config.host, '${config.path}$prefix/queue/$id'),
+        headers: baseHeaders());
+    if (response.statusCode == HttpStatus.ok) {
+      return Queue.readJson(json.decode(response.body));
     } else {
       throw 'Unexpected status code : ${response.statusCode}';
     }
@@ -71,14 +85,27 @@ class APIService {
     }
   }
 
-  Future<Queue> fetchQueue(String id) async {
+  Future<RTSystemInfo> fetchRTSystemInfo() async {
     assert(isUsable());
 
     var response = await http.get(
-        Uri.https(config.host, '${config.path}$prefix/queue/$id'),
+        Uri.https(config.host, '${config.path}$prefix/rt'),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
-      return Queue.readJson(json.decode(response.body));
+      return RTSystemInfo.readJson(json.decode(response.body));
+    } else {
+      throw 'Unexpected status code : ${response.statusCode}';
+    }
+  }
+
+  Future<Ticket> fetchTicket(String id) async {
+    assert(isUsable());
+
+    var response = await http.get(
+        Uri.https(config.host, '${config.path}$prefix/ticket/$id'),
+        headers: baseHeaders());
+    if (response.statusCode == HttpStatus.ok) {
+      return Ticket.readJson(json.decode(response.body));
     } else {
       throw 'Unexpected status code : ${response.statusCode}';
     }
@@ -104,24 +131,24 @@ class APIService {
     }
   }
 
-  Future<Ticket> fetchTicket(String id) async {
+  Future<Transaction> fetchTransaction(String id) async {
     assert(isUsable());
 
     var response = await http.get(
-        Uri.https(config.host, '${config.path}$prefix/ticket/$id'),
+        Uri.https(config.host, '${config.path}$prefix/transaction/$id'),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
-      return Ticket.readJson(json.decode(response.body));
+      return Transaction.readJson(json.decode(response.body));
     } else {
       throw 'Unexpected status code : ${response.statusCode}';
     }
   }
 
-  Future<Paginable<Transaction>> fetchTransactions(String id) async {
+  Future<Paginable<Transaction>> fetchTransactions(String ticketId) async {
     assert(isUsable());
 
     var response = await http.get(
-        Uri.https(config.host, '${config.path}$prefix/ticket/$id/history',
+        Uri.https(config.host, '${config.path}$prefix/ticket/$ticketId/history',
             {'fields': 'Type,Data'}),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
@@ -132,14 +159,14 @@ class APIService {
     }
   }
 
-  Future<Attachment> fetchAttachment(String id) async {
+  Future<User> fetchUser(String id) async {
     assert(isUsable());
 
     var response = await http.get(
-        Uri.https(config.host, '${config.path}$prefix/attachment/$id'),
+        Uri.https(config.host, '${config.path}$prefix/transaction/$id'),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
-      return Attachment.readJson(json.decode(response.body));
+      return User.readJson(json.decode(response.body));
     } else {
       throw 'Unexpected status code : ${response.statusCode}';
     }

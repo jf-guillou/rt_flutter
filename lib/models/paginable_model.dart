@@ -37,6 +37,7 @@ class Paginable<T extends ItemModel> extends BaseModel {
     page = p.page;
     pages = p.pages;
     items.addAll(p.items);
+    modelUpdated();
 
     return this;
   }
