@@ -11,7 +11,8 @@ class Paginable<T extends ItemModel> extends BaseModel {
   int perPage;
   List<T> items;
 
-  Paginable.readJson(Map<String, dynamic> json, Itemizer<T> itemizer) {
+  Paginable.readJson(Map<String, dynamic> json, Itemizer<T> itemizer)
+      : super() {
     assert(json != null);
 
     total = json['total'];
@@ -30,11 +31,13 @@ class Paginable<T extends ItemModel> extends BaseModel {
     return items.firstWhere((q) => q.id == id, orElse: () => null);
   }
 
-  void mergeWith(Paginable<T> p) {
+  Paginable<T> mergeWith(Paginable<T> p) {
     total = p.total;
     count += p.count;
     page = p.page;
     pages = p.pages;
     items.addAll(p.items);
+
+    return this;
   }
 }

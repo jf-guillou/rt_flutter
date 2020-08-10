@@ -6,8 +6,6 @@ class APIConfig {
   String _authBasic;
   String _authToken;
 
-  APIConfig();
-
   bool isConnectable() {
     return host != '';
   }

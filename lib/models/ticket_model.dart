@@ -25,17 +25,17 @@ class Ticket extends ItemModel {
     subject = json['Subject'];
     status = json['Status'];
     priority = json['Priority'];
-    created = super.parseDate(json['Created']);
+    created = parseDate(json['Created']);
     creator = User.readJson(json['Creator']);
     requestors = User.readJsonList(json['Requestor']);
     cc = User.readJsonList(json['Cc']);
     adminCc = User.readJsonList(json['AdminCc']);
     owner = User.readJson(json['Owner']);
     queue = Queue.readJson(json['Queue']);
-    lastUpdated = super.parseDate(json['LastUpdated']);
+    lastUpdated = parseDate(json['LastUpdated']);
     lastUpdatedBy = User.readJson(json['LastUpdatedBy']);
     priority = json['Priority'];
-    resolved = super.parseDate(json['Resolved']);
+    resolved = parseDate(json['Resolved']);
     customFields = CustomField.readJsonList(json['CustomFields']);
   }
 }

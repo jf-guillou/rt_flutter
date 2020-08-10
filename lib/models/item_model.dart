@@ -4,7 +4,7 @@ class ItemModel extends BaseModel {
   String id;
   String type;
 
-  ItemModel.readJson(Map<String, dynamic> json) {
+  ItemModel.readJson(Map<String, dynamic> json) : super() {
     if (json == null) return;
 
     id = json['id'] is int ? json['id'].toString() : json['id'];
