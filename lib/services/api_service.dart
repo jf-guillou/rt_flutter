@@ -123,7 +123,7 @@ class APIService {
         Uri.https(config.host, '${config.path}$prefix/tickets', {
           'query': 'Queue=$queueId',
           'page': '$page',
-          'fields': 'Subject',
+          'fields': 'Subject,Status',
           'orderby': 'id',
           'order': 'desc'
         }),

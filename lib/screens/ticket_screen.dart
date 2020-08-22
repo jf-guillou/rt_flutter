@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rt_flutter/components/ticket_state_icon.dart';
 import 'package:rt_flutter/components/transaction_listitem.dart';
 import 'package:rt_flutter/models/paginable_model.dart';
 import 'package:rt_flutter/models/ticket_model.dart';
@@ -50,7 +51,11 @@ class _TicketScreenState extends State<TicketScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('#$id')),
+      appBar: AppBar(
+          title: Row(children: [
+        if (_ticket != null) TicketStateIcon(_ticket.status),
+        Text(' #$id'),
+      ])),
       body: _ticket != null
           ? Column(children: [
               Padding(

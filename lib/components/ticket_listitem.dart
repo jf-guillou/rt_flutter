@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rt_flutter/components/ticket_state_icon.dart';
 import 'package:rt_flutter/models/ticket_model.dart';
 import 'package:rt_flutter/screens/ticket_screen.dart';
 
@@ -13,7 +14,12 @@ class TicketListItem extends StatelessWidget {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => TicketScreen(t.id)));
       },
-      title: Text('#${t.id}'),
+      title: Row(
+        children: [
+          TicketStateIcon(t.status, size: 16.0),
+          Text(' #${t.id}'),
+        ],
+      ),
       subtitle: Text(t.subject),
       isThreeLine: true,
     );
