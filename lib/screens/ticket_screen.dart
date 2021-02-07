@@ -76,8 +76,7 @@ class _TicketScreenState extends State<TicketScreen> {
                   ? Expanded(
                       child: CustomScrollView(
                         slivers: <Widget>[
-                          SliverFixedExtentList(
-                            itemExtent: 80.0,
+                          SliverList(
                             delegate: SliverChildBuilderDelegate(
                               (BuildContext context, int index) {
                                 return index < _transactions.count
