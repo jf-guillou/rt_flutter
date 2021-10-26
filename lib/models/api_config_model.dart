@@ -1,13 +1,12 @@
 import 'dart:convert';
 
 class APIConfig {
-  String? host;
-  String path = '';
+  Uri? uri;
   String? _authBasic;
   String? _authToken;
 
   bool isConnectable() {
-    return host != '';
+    return uri != null;
   }
 
   bool isUsable() {
@@ -19,23 +18,10 @@ class APIConfig {
   }
 
   void setUrl(String url) {
-    if (url.startsWith('http://')) {
+    uri = Uri.parse(url);
+    print(uri.toString());
+    if (!uri!.isScheme("HTTPS")) {
       throw 'Non-https urls are unsupported';
-    }
-
-    // Cleanup https://
-    if (url.startsWith('https://')) {
-      url = url.replaceFirst('https://', '');
-    }
-
-    if (url.contains('/')) {
-      var parts = url.split('/');
-      host = parts.removeAt(0);
-      // Remove trailing '/'
-      parts.remove('');
-      path = parts.join('/');
-    } else {
-      host = url;
     }
   }
 
