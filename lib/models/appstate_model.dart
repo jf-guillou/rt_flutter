@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppState extends ChangeNotifier {
-  String _currentQueueId;
+  String? _currentQueueId;
 
   AppState() {
     _loadState();
@@ -15,13 +15,13 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  set currentQueue(String id) {
+  set currentQueue(String? id) {
     _currentQueueId = id;
     notifyListeners();
     print('AppState:_loadState:_currentQueueId:$_currentQueueId');
     SharedPreferences.getInstance()
-        .then((prefs) => prefs.setString('current_queue', id));
+        .then((prefs) => prefs.setString('current_queue', id!));
   }
 
-  get currentQueue => _currentQueueId;
+  String? get currentQueue => _currentQueueId;
 }

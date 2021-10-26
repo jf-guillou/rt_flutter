@@ -8,7 +8,7 @@ import 'package:rt_flutter/models/transaction_model.dart';
 import 'package:rt_flutter/services/api_service.dart';
 
 class TicketScreen extends StatefulWidget {
-  final String id;
+  final String? id;
   TicketScreen(this.id);
 
   @override
@@ -16,9 +16,9 @@ class TicketScreen extends StatefulWidget {
 }
 
 class _TicketScreenState extends State<TicketScreen> {
-  final String id;
-  Ticket _ticket;
-  Paginable<Transaction> _transactions;
+  final String? id;
+  Ticket? _ticket;
+  Paginable<Transaction>? _transactions;
   DateFormat df = DateFormat('dd/MM/y HH:mm');
 
   _TicketScreenState(this.id);
@@ -53,24 +53,24 @@ class _TicketScreenState extends State<TicketScreen> {
     return Scaffold(
       appBar: AppBar(
           title: Row(children: [
-        if (_ticket != null) TicketStateIcon(_ticket.status),
+        if (_ticket != null) TicketStateIcon(_ticket!.status),
         Text(' #$id'),
       ])),
       body: _ticket != null
           ? Column(children: [
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Text(_ticket.subject, style: TextStyle(fontSize: 20)),
+                child: Text(_ticket!.subject!, style: TextStyle(fontSize: 20)),
               ),
-              Text('State: ${_ticket.status}'),
-              Text('Created: ${df.format(_ticket.created)}'),
-              Text('LastUpdate: ${df.format(_ticket.lastUpdated)}'),
+              Text('State: ${_ticket!.status}'),
+              Text('Created: ${df.format(_ticket!.created!)}'),
+              Text('LastUpdate: ${df.format(_ticket!.lastUpdated!)}'),
               // Text('Creator: ${_ticket.creator.id}'),
-              for (var u in _ticket.requestors) Text('Requestor: ${u.id}'),
-              for (var u in _ticket.cc) Text('CC: ${u.id}'),
-              for (var u in _ticket.adminCc) Text('AdminCC: ${u.id}'),
-              Text('Owner: ${_ticket.owner.id}'),
-              for (var cf in _ticket.customFields)
+              for (var u in _ticket!.requestors!) Text('Requestor: ${u.id}'),
+              for (var u in _ticket!.cc!) Text('CC: ${u.id}'),
+              for (var u in _ticket!.adminCc!) Text('AdminCC: ${u.id}'),
+              Text('Owner: ${_ticket!.owner.id}'),
+              for (var cf in _ticket!.customFields!)
                 Text('CF[${cf.name}]: ${cf.values}'),
               _transactions != null
                   ? Expanded(
@@ -79,9 +79,9 @@ class _TicketScreenState extends State<TicketScreen> {
                           SliverList(
                             delegate: SliverChildBuilderDelegate(
                               (BuildContext context, int index) {
-                                return index < _transactions.count
+                                return index < _transactions!.count!
                                     ? TransactionListItem(
-                                        _transactions.items.elementAt(index))
+                                        _transactions!.items.elementAt(index))
                                     : null;
                               },
                             ),

@@ -1,8 +1,8 @@
 /// BaseModel is base abstract class used by all fetched models
 abstract class BaseModel {
-  DateTime _createdAt;
+  DateTime? _createdAt;
   // TODO: Find out if we really need _updatedAt or only _createdAt
-  DateTime _updatedAt;
+  DateTime? _updatedAt;
   Duration stalenessThreshold = Duration(hours: 1);
 
   BaseModel() {
@@ -10,7 +10,7 @@ abstract class BaseModel {
   }
 
   isStale() {
-    return modelAge().add(stalenessThreshold).isBefore(DateTime.now());
+    return modelAge()!.add(stalenessThreshold).isBefore(DateTime.now());
   }
 
   modelUpdated() {
@@ -18,7 +18,7 @@ abstract class BaseModel {
   }
 
   // TODO: At some point we should use this to set If-Modified-Since header
-  DateTime modelAge() {
+  DateTime? modelAge() {
     return _updatedAt ?? _createdAt;
   }
 }

@@ -2,18 +2,18 @@ import 'package:rt_flutter/models/item_model.dart';
 import 'package:rt_flutter/services/api_service.dart';
 
 class User extends ItemModel {
-  String realName;
+  String? realName;
 
-  User.readJson(Map<String, dynamic> json) : super.readJson(json) {
+  User.readJson(Map<String, dynamic>? json) : super.readJson(json) {
     if (json == null) return;
 
     realName = json['RealName'];
   }
 
-  static List<User> readJsonList(List<dynamic> json) {
+  static List<User>? readJsonList(List<dynamic>? json) {
     if (json == null) return null;
 
-    List<User> _items = List();
+    List<User> _items = [];
     for (var i in json) {
       _items.add(User.readJson(i));
     }

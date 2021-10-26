@@ -5,7 +5,7 @@ import 'package:rt_flutter/screens/ticket_screen.dart';
 
 class TicketListItem extends StatelessWidget {
   final Ticket t;
-  const TicketListItem(this.t, {Key key}) : super(key: key);
+  const TicketListItem(this.t, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class TicketListItem extends StatelessWidget {
           Text(' #${t.id}'),
         ],
       ),
-      subtitle: Text(t.subject),
+      subtitle: Text(t.subject!),
       isThreeLine: true,
     );
   }

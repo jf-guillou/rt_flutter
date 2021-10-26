@@ -16,17 +16,17 @@ class APIService {
   static final APIService instance = APIService._instantiate();
   static const prefix = '/REST/2.0';
 
-  APIConfig config;
+  APIConfig? config;
 
   bool isUsable() {
-    return config != null && config.isUsable();
+    return config != null && config!.isUsable();
   }
 
   Future<bool> ping() async {
-    assert(config != null && config.isConnectable());
+    assert(config != null && config!.isConnectable());
 
     var response =
-        await http.get(Uri.https(config.host, '${config.path}$prefix/rt'));
+        await http.get(Uri.https(config!.host!, '${config!.path}$prefix/rt'));
     if (response.statusCode == HttpStatus.unauthorized) {
       if (json.decode(response.body)['message'] == 'Unauthorized') {
         return true;
@@ -38,7 +38,7 @@ class APIService {
 
   Map<String, String> baseHeaders() {
     return {
-      HttpHeaders.authorizationHeader: config.authorizationHeader(),
+      HttpHeaders.authorizationHeader: config!.authorizationHeader(),
       // HttpHeaders.contentTypeHeader: 'application/json',
       // HttpHeaders.acceptHeader: 'application/json',
     };
@@ -48,7 +48,7 @@ class APIService {
     assert(isUsable());
 
     var response = await http.get(
-        Uri.https(config.host, '${config.path}$prefix/attachment/$id'),
+        Uri.https(config!.host!, '${config!.path}$prefix/attachment/$id'),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Attachment.readJson(json.decode(response.body));
@@ -62,7 +62,7 @@ class APIService {
 
     print('fetchQueue:$id');
     var response = await http.get(
-        Uri.https(config.host, '${config.path}$prefix/queue/$id'),
+        Uri.https(config!.host!, '${config!.path}$prefix/queue/$id'),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Queue.readJson(json.decode(response.body));
@@ -76,7 +76,7 @@ class APIService {
 
     print('fetchQueues');
     var response = await http.get(
-        Uri.https(config.host, '${config.path}$prefix/queues/all',
+        Uri.https(config!.host!, '${config!.path}$prefix/queues/all',
             {'fields': 'Name,Description'}),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
@@ -92,7 +92,7 @@ class APIService {
 
     print('fetchRTSystemInfo');
     var response = await http.get(
-        Uri.https(config.host, '${config.path}$prefix/rt'),
+        Uri.https(config!.host!, '${config!.path}$prefix/rt'),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return RTSystemInfo.readJson(json.decode(response.body));
@@ -101,12 +101,12 @@ class APIService {
     }
   }
 
-  Future<Ticket> fetchTicket(String id) async {
+  Future<Ticket> fetchTicket(String? id) async {
     assert(isUsable());
 
     print('fetchTicket:$id');
     var response = await http.get(
-        Uri.https(config.host, '${config.path}$prefix/ticket/$id'),
+        Uri.https(config!.host!, '${config!.path}$prefix/ticket/$id'),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Ticket.readJson(json.decode(response.body));
@@ -115,12 +115,12 @@ class APIService {
     }
   }
 
-  Future<Paginable<Ticket>> fetchTickets(String queueId, {int page: 1}) async {
+  Future<Paginable<Ticket>> fetchTickets(String? queueId, {int page: 1}) async {
     assert(isUsable());
 
     print('fetchTickets:$queueId');
     var response = await http.get(
-        Uri.https(config.host, '${config.path}$prefix/tickets', {
+        Uri.https(config!.host!, '${config!.path}$prefix/tickets', {
           'query': 'Queue=$queueId',
           'page': '$page',
           'fields': 'Subject,Status',
@@ -141,7 +141,7 @@ class APIService {
 
     print('fetchTransaction:$id');
     var response = await http.get(
-        Uri.https(config.host, '${config.path}$prefix/transaction/$id'),
+        Uri.https(config!.host!, '${config!.path}$prefix/transaction/$id'),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Transaction.readJson(json.decode(response.body));
@@ -150,12 +150,12 @@ class APIService {
     }
   }
 
-  Future<Paginable<Transaction>> fetchTransactions(String ticketId) async {
+  Future<Paginable<Transaction>> fetchTransactions(String? ticketId) async {
     assert(isUsable());
 
     print('fetchTransactions:$ticketId');
     var response = await http.get(
-        Uri.https(config.host, '${config.path}$prefix/ticket/$ticketId/history',
+        Uri.https(config!.host!, '${config!.path}$prefix/ticket/$ticketId/history',
             {'fields': 'Type,Data'}),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
@@ -166,12 +166,12 @@ class APIService {
     }
   }
 
-  Future<User> fetchUser(String id) async {
+  Future<User> fetchUser(String? id) async {
     assert(isUsable());
 
     print('fetchUser:$id');
     var response = await http.get(
-        Uri.https(config.host, '${config.path}$prefix/transaction/$id'),
+        Uri.https(config!.host!, '${config!.path}$prefix/transaction/$id'),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return User.readJson(json.decode(response.body));

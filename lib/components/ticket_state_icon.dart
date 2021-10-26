@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class TicketStateIcon extends StatelessWidget {
-  final String state;
+  final String? state;
   final num size;
-  const TicketStateIcon(this.state, {Key key, this.size = 24.0})
+  const TicketStateIcon(this.state, {Key? key, this.size = 24.0})
       : super(key: key);
 
   IconData get icon {
@@ -44,7 +44,7 @@ class TicketStateIcon extends StatelessWidget {
     return Icon(
       icon,
       color: color,
-      size: size,
+      size: size as double?,
       semanticLabel: state,
     );
   }

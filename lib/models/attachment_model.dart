@@ -7,7 +7,7 @@ class Attachment extends ItemModel {
   // String subject;
   // String parent;
   // String headers;
-  String content;
+  String? content;
   // String contentType;
   // String messageId;
 

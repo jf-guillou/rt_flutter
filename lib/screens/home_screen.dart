@@ -17,8 +17,8 @@ class HomeScreen extends StatefulWidget {
 enum MenuItem { queues, help }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Paginable<Queue> _queues;
-  Paginable<Ticket> _tickets;
+  Paginable<Queue>? _queues;
+  Paginable<Ticket>? _tickets;
   ScrollController _scrollController = ScrollController();
 
   @override
@@ -63,15 +63,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _appendTickets() async {
     var provider = Provider.of<AppState>(context, listen: false);
     var tickets = await APIService.instance
-        .fetchTickets(provider.currentQueue, page: _tickets.page + 1);
+        .fetchTickets(provider.currentQueue, page: _tickets!.page! + 1);
     if (mounted) {
       setState(() {
-        _tickets.mergeWith(tickets);
+        _tickets!.mergeWith(tickets);
       });
     }
   }
 
-  _setCurrentQueue(String id) {
+  _setCurrentQueue(String? id) {
     Provider.of<AppState>(context, listen: false).currentQueue = id;
     _getTickets();
   }
@@ -84,9 +84,9 @@ class _HomeScreenState extends State<HomeScreen> {
         return Container(
           height: 240,
           child: ListView.builder(
-            itemCount: _queues.count,
+            itemCount: _queues!.count,
             itemBuilder: (BuildContext context, int index) {
-              final q = _queues.items[index];
+              final q = _queues!.items[index];
               return ListTile(
                   leading: Container(
                     padding: EdgeInsets.symmetric(vertical: 12),
@@ -96,8 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           : Icons.radio_button_unchecked);
                     }),
                   ),
-                  title: Text(q.name),
-                  subtitle: Text(q.description),
+                  title: Text(q.name!),
+                  subtitle: Text(q.description!),
                   onTap: () {
                     _setCurrentQueue(q.id);
                     Navigator.pop(context);
@@ -149,8 +149,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemExtent: 80.0,
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
-                          return index < _tickets.count
-                              ? TicketListItem(_tickets.items.elementAt(index))
+                          return index < _tickets!.count!
+                              ? TicketListItem(_tickets!.items.elementAt(index))
                               : null;
                         },
                       ),

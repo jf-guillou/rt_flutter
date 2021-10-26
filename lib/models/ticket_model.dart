@@ -4,22 +4,22 @@ import 'package:rt_flutter/models/queue_model.dart';
 import 'package:rt_flutter/models/user_model.dart';
 
 class Ticket extends ItemModel {
-  String subject;
-  String status;
-  String priority;
-  DateTime created;
-  User creator;
-  List<User> requestors;
-  List<User> cc;
-  List<User> adminCc;
-  User owner;
-  Queue queue;
-  DateTime lastUpdated;
-  User lastUpdatedBy;
-  DateTime resolved;
-  List<CustomField> customFields;
+  String? subject;
+  String? status;
+  String? priority;
+  DateTime? created;
+  User? creator;
+  List<User>? requestors;
+  List<User>? cc;
+  List<User>? adminCc;
+  late User owner;
+  Queue? queue;
+  DateTime? lastUpdated;
+  User? lastUpdatedBy;
+  DateTime? resolved;
+  List<CustomField>? customFields;
 
-  Ticket.readJson(Map<String, dynamic> json) : super.readJson(json) {
+  Ticket.readJson(Map<String, dynamic>? json) : super.readJson(json) {
     if (json == null) return;
 
     subject = json['Subject'];

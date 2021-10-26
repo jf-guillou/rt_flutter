@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 class APIConfig {
-  String host;
+  String? host;
   String path = '';
-  String _authBasic;
-  String _authToken;
+  String? _authBasic;
+  String? _authToken;
 
   bool isConnectable() {
     return host != '';
