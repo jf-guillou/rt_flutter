@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
       // to allow calling Scaffold.of(context) so we can show a snackbar.
       body: Builder(builder: (BuildContext context) {
         return WebView(
-          initialUrl: APIService.instance.config!.uri.toString(),
+          initialUrl: host() + '/Prefs/AuthTokens.html',
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) {
             _controller.complete(webViewController);
@@ -37,14 +37,12 @@ class _LoginScreenState extends State<LoginScreen> {
           onProgress: (int progress) {
             print("WebView is loading (progress : $progress%)");
           },
-          javascriptChannels: <JavascriptChannel>{
-            _toasterJavascriptChannel(context),
-          },
           onPageStarted: (String url) {
             print('Page started loading: $url');
           },
           onPageFinished: (String url) {
             print('Page finished loading: $url');
+            // _controller.future.then((controller) => controller.currentUrl());
           },
           gestureNavigationEnabled: true,
         );
@@ -52,14 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
-    return JavascriptChannel(
-        name: 'Toaster',
-        onMessageReceived: (JavascriptMessage message) {
-          // ignore: deprecated_member_use
-          Scaffold.of(context).showSnackBar(
-            SnackBar(content: Text(message.message)),
-          );
-        });
+  String host() {
+    return APIService.instance.config!.uri.toString();
   }
 }
