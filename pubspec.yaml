@@ -34,6 +34,7 @@ dependencies:
   intl: ^0.17.0
   collection: ^1.15.0
   webview_flutter: ^3.0.2
+  package_info_plus:
 
 dev_dependencies:
   flutter_test:

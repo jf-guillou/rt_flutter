@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:rt_flutter/services/api_service.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -29,11 +31,18 @@ class _LoginScreenState extends State<LoginScreen> {
       // to allow calling Scaffold.of(context) so we can show a snackbar.
       body: Builder(builder: (BuildContext context) {
         return WebView(
-          initialUrl: host() + '/Prefs/AuthTokens.html',
+          initialUrl: tokenListUrl(),
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) {
             _controller.complete(webViewController);
           },
+          javascriptChannels: [
+            JavascriptChannel(
+                name: 'TokenExtractor',
+                onMessageReceived: (message) {
+                  print(message.message);
+                })
+          ].toSet(),
           onProgress: (int progress) {
             print("WebView is loading (progress : $progress%)");
           },
@@ -42,7 +51,17 @@ class _LoginScreenState extends State<LoginScreen> {
           },
           onPageFinished: (String url) {
             print('Page finished loading: $url');
-            // _controller.future.then((controller) => controller.currentUrl());
+            _controller.future.then(
+                (controller) => controller.currentUrl().then((value) async {
+                      if (hasReachedTokensList(value)) {
+                        String owner = await getUserID(controller);
+                        PackageInfo packageInfo =
+                            await PackageInfo.fromPlatform();
+                        String description =
+                            packageInfo.packageName + "_" + packageInfo.version;
+                        generateToken(controller, owner, description);
+                      }
+                    }));
           },
           gestureNavigationEnabled: true,
         );
@@ -50,7 +69,31 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  String host() {
-    return APIService.instance.config!.uri.toString();
+  String tokenListUrl() {
+    return APIService.instance.config!.uri.toString() +
+        '/Prefs/AuthTokens.html';
+  }
+
+  bool hasReachedTokensList(String? url) {
+    return url == tokenListUrl();
+  }
+
+  Future<String> extractToken(WebViewController controller) async {
+    return await controller.runJavascriptReturningResult(
+        'document.querySelector(".action-results").innerText.match("(\\d+-\\d+-\\w+)")');
+  }
+
+  Future<String> getUserID(WebViewController controller) async {
+    return controller.runJavascriptReturningResult('RT.CurrentUser.id');
+  }
+
+  void generateToken(
+      WebViewController controller, String ownerID, String description) {
+    String params = jsonEncode(
+        {"Owner": ownerID, "Description": description, "Create": true});
+    controller.runJavascript(
+        'fetch("${tokenListUrl()}", { method: "POST", body: new URLSearchParams($params) }).then((response) => { ' +
+            'if (response.ok) { return response.text().then((text) => { ' +
+            'window.TokenExtractor.postMessage(text.match("(\\d+-\\d+-\\w+)")) }) }})');
   }
 }
