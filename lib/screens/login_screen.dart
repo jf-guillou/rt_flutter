@@ -40,7 +40,9 @@ class _LoginScreenState extends State<LoginScreen> {
             JavascriptChannel(
                 name: 'TokenExtractor',
                 onMessageReceived: (message) {
-                  print(message.message);
+                  String token = message.message;
+                  // TODO: Store this
+                  print(token);
                 })
           ].toSet(),
           onProgress: (int progress) {
@@ -78,11 +80,6 @@ class _LoginScreenState extends State<LoginScreen> {
     return url == tokenListUrl();
   }
 
-  Future<String> extractToken(WebViewController controller) async {
-    return await controller.runJavascriptReturningResult(
-        'document.querySelector(".action-results").innerText.match("(\\d+-\\d+-\\w+)")');
-  }
-
   Future<String> getUserID(WebViewController controller) async {
     return controller.runJavascriptReturningResult('RT.CurrentUser.id');
   }
@@ -94,6 +91,6 @@ class _LoginScreenState extends State<LoginScreen> {
     controller.runJavascript(
         'fetch("${tokenListUrl()}", { method: "POST", body: new URLSearchParams($params) }).then((response) => { ' +
             'if (response.ok) { return response.text().then((text) => { ' +
-            'window.TokenExtractor.postMessage(text.match("(\\d+-\\d+-\\w+)")) }) }})');
+            'window.TokenExtractor.postMessage(text.match("(\\\\d+-\\\\d+-\\\\w+)")[0]) }) }})');
   }
 }
