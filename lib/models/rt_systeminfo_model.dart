@@ -8,6 +8,6 @@ class RTSystemInfo extends BaseModel {
   }
 
   bool isValid() {
-    return version!.startsWith('4');
+    return version!.startsWith('4') || version!.startsWith('5');
   }
 }
