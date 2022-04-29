@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rt_flutter/models/api_config_model.dart';
 import 'package:rt_flutter/services/api_service.dart';
-import 'package:rt_flutter/utilities/keys.dart';
 import 'package:rt_flutter/screens/home_screen.dart';
 import 'package:rt_flutter/screens/login_screen.dart';
+import 'package:rt_flutter/models/appstate_model.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -16,16 +17,25 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    Provider.of<AppState>(context, listen: false).addListener(_initState);
+  }
+
+  void _initState() {
+    Provider.of<AppState>(context, listen: false).removeListener(_initState);
     _initAPIConfig();
     _testConnectivity();
   }
 
   _initAPIConfig() {
     APIService.instance.config = APIConfig()
-      ..setUrl('https://snps.univ-nantes.fr/rt')
-      ..setAuthToken(RTAPIKey);
+      ..setUrl('https://snps.univ-nantes.fr/rt');
 
-    assert(APIService.instance.isUsable());
+    String? token = Provider.of<AppState>(context, listen: false).token;
+    print("_initAPIConfig:$token");
+    if (token != null && token.isNotEmpty) {
+      print(token);
+      APIService.instance.config?.setAuthToken(token);
+    }
   }
 
   _testConnectivity() async {
