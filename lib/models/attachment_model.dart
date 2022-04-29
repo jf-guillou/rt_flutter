@@ -8,10 +8,12 @@ class Attachment extends ItemModel {
   // String parent;
   // String headers;
   String? content;
-  // String contentType;
+  String? contentType;
   // String messageId;
 
-  Attachment.readJson(Map<String, dynamic> json) : super.readJson(json) {
+  Attachment.readJson(Map<String, dynamic>? json) : super.readJson(json) {
+    if (json == null) return;
+
     // creator = User.readJson(json['Creator']);
     // created = parseDate(json['Created']);
     // json['TransactionId'];
@@ -19,7 +21,7 @@ class Attachment extends ItemModel {
     // parent = json['Parent'];
     // headers = json['Headers'];
     content = json['Content'];
-    // contentType = json['ContentType'];
+    contentType = json['ContentType'];
     // messageId = json['MessageId'];
   }
 }

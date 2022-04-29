@@ -160,11 +160,29 @@ class APIService {
         Uri.https(
             config!.uri!.host,
             '${config!.uri!.path}$prefix/ticket/$ticketId/history',
-            {'fields': 'Type,Data'}),
+            {'fields': 'Created,Creator,Type,Data,Field,OldValue,NewValue'}),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Paginable<Transaction>.readJson(
           json.decode(response.body), (item) => Transaction.readJson(item));
+    } else {
+      throw 'Unexpected status code : ${response.statusCode}';
+    }
+  }
+
+  Future<Paginable<Attachment>> fetchAttachments(String? transactionId) async {
+    assert(isUsable());
+
+    print('fetchAttachments:$transactionId');
+    var response = await http.get(
+        Uri.https(
+            config!.uri!.host,
+            '${config!.uri!.path}$prefix/transaction/$transactionId/attachments',
+            {'fields': 'ContentType,Content'}),
+        headers: baseHeaders());
+    if (response.statusCode == HttpStatus.ok) {
+      return Paginable<Attachment>.readJson(
+          json.decode(response.body), (item) => Attachment.readJson(item));
     } else {
       throw 'Unexpected status code : ${response.statusCode}';
     }
