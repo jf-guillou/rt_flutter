@@ -79,10 +79,15 @@ class _TicketScreenState extends State<TicketScreen> {
                           SliverList(
                             delegate: SliverChildBuilderDelegate(
                               (BuildContext context, int index) {
-                                return index < _transactions!.count!
-                                    ? TransactionListItem(
-                                        _transactions!.items.elementAt(index))
-                                    : null;
+                                if (index >= _transactions!.count!) {
+                                  return null;
+                                }
+                                var t = _transactions!.items.elementAt(index);
+                                // Hide plain email sent records
+                                // if (t.tType == "EmailRecord") {
+                                //   return null;
+                                // }
+                                return TransactionListItem(t);
                               },
                             ),
                           ),

@@ -37,8 +37,12 @@ class _TransactionListItemState extends State<TransactionListItem> {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(widget.t.tType!),
-      subtitle:
-          Text(_attachments != null ? _attachments!.count.toString() : "_0"),
+      subtitle: Text(_attachments != null
+          ? _attachments!.items
+              .where((e) => e.contentType == "text/plain")
+              .map((e) => e.content)
+              .join("___")
+          : "_0"),
     );
   }
 }
