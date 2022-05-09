@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rt_flutter/screens/home_screen.dart';
 import 'package:rt_flutter/services/api_service.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -43,8 +44,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 name: 'TokenExtractor',
                 onMessageReceived: (message) {
                   String token = message.message;
-                  print(token);
                   Provider.of<AppState>(context, listen: false).token = token;
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => HomeScreen()));
                 })
           ].toSet(),
           onProgress: (int progress) {
