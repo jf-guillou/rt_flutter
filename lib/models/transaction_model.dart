@@ -1,3 +1,4 @@
+import 'package:rt_flutter/models/attachment_model.dart';
 import 'package:rt_flutter/models/item_model.dart';
 import 'package:rt_flutter/models/user_model.dart';
 
@@ -9,6 +10,7 @@ class Transaction extends ItemModel {
   String? field;
   String? oldValue;
   String? newValue;
+  List<Attachment>? attachments;
 
   Transaction.readJson(Map<String, dynamic>? json) : super.readJson(json) {
     if (json == null) return;
@@ -20,5 +22,6 @@ class Transaction extends ItemModel {
     field = json['Field'];
     oldValue = json['OldValue'];
     newValue = json['NewValue'];
+    attachments = [];
   }
 }

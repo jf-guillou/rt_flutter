@@ -4,6 +4,7 @@ import 'package:rt_flutter/models/item_model.dart';
 class Attachment extends ItemModel {
   // User creator;
   // DateTime created;
+  String? transactionId;
   // String subject;
   // String parent;
   // String headers;
@@ -16,7 +17,7 @@ class Attachment extends ItemModel {
 
     // creator = User.readJson(json['Creator']);
     // created = parseDate(json['Created']);
-    // json['TransactionId'];
+    transactionId = json['TransactionId'];
     // subject = json['Subject'];
     // parent = json['Parent'];
     // headers = json['Headers'];

@@ -40,7 +40,11 @@ class _TicketScreenState extends State<TicketScreen> {
   }
 
   _getHistory() async {
-    var transactions = await APIService.instance.fetchTransactions(id);
+    var transactions = await APIService.instance.fetchTransactionsForTicket(id);
+    var attachments = await APIService.instance.fetchAttachmentsForTicket(id);
+    for (var a in attachments.items) {
+      transactions.getElementById(a.transactionId)!.attachments!.add(a);
+    }
     if (mounted) {
       setState(() {
         _transactions = transactions;
@@ -71,7 +75,8 @@ class _TicketScreenState extends State<TicketScreen> {
               for (var u in _ticket!.adminCc!) Text('AdminCC: ${u.id}'),
               Text('Owner: ${_ticket!.owner.id}'),
               for (var cf in _ticket!.customFields!)
-                Text('CF[${cf.name}]: ${cf.values}'),
+                if (cf.values != null && cf.values!.length > 0)
+                  Text('${cf.name}: ${cf.values!.join(', ')}'),
               _transactions != null
                   ? Expanded(
                       child: CustomScrollView(

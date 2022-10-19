@@ -152,10 +152,11 @@ class APIService {
     }
   }
 
-  Future<Paginable<Transaction>> fetchTransactions(String? ticketId) async {
+  Future<Paginable<Transaction>> fetchTransactionsForTicket(
+      String? ticketId) async {
     assert(isUsable());
 
-    print('fetchTransactions:$ticketId');
+    print('fetchTransactionsForTicket:$ticketId');
     var response = await http.get(
         Uri.https(
             config!.uri!.host,
@@ -170,15 +171,35 @@ class APIService {
     }
   }
 
-  Future<Paginable<Attachment>> fetchAttachments(String? transactionId) async {
+  Future<Paginable<Attachment>> fetchAttachmentsForTransaction(
+      String? transactionId) async {
     assert(isUsable());
 
-    print('fetchAttachments:$transactionId');
+    print('fetchAttachmentsForTransaction:$transactionId');
     var response = await http.get(
         Uri.https(
             config!.uri!.host,
             '${config!.uri!.path}$prefix/transaction/$transactionId/attachments',
             {'fields': 'ContentType,Content'}),
+        headers: baseHeaders());
+    if (response.statusCode == HttpStatus.ok) {
+      return Paginable<Attachment>.readJson(
+          json.decode(response.body), (item) => Attachment.readJson(item));
+    } else {
+      throw 'Unexpected status code : ${response.statusCode}';
+    }
+  }
+
+  Future<Paginable<Attachment>> fetchAttachmentsForTicket(
+      String? ticketId) async {
+    assert(isUsable());
+
+    print('fetchAttachmentsForTicket:$ticketId');
+    var response = await http.get(
+        Uri.https(
+            config!.uri!.host,
+            '${config!.uri!.path}$prefix/ticket/$ticketId/attachments',
+            {'fields': 'ContentType,Content,TransactionId'}),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Paginable<Attachment>.readJson(
