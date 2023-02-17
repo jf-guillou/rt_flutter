@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rt_flutter/components/ticket_listitem.dart';
@@ -10,20 +12,23 @@ import 'package:rt_flutter/services/api_service.dart';
 final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  HomeScreenState createState() => HomeScreenState();
 }
 
 enum MenuItem { queues, help }
 
-class _HomeScreenState extends State<HomeScreen> {
+class HomeScreenState extends State<HomeScreen> {
   Paginable<Queue>? _queues;
   Paginable<Ticket>? _tickets;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    developer.log("initState");
     _getQueues();
     _getTickets();
     _scrollController.addListener(() {
@@ -35,8 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _getQueues() async {
-    var queues = await APIService.instance.fetchQueues();
     var provider = Provider.of<AppState>(context, listen: false);
+    var queues = await APIService.instance.fetchQueues();
     if (queues.getElementById(provider.currentQueue) == null) {
       provider.currentQueue = queues.items.first.id;
     }
@@ -81,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return Container(
+        return SizedBox(
           height: 240,
           child: ListView.builder(
             itemCount: _queues!.count,
@@ -89,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
               final q = _queues!.items[index];
               return ListTile(
                   leading: Container(
-                    padding: EdgeInsets.symmetric(vertical: 12),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Consumer<AppState>(builder: (context, state, child) {
                       return Icon(state.currentQueue == q.id
                           ? Icons.radio_button_checked
@@ -117,7 +122,9 @@ class _HomeScreenState extends State<HomeScreen> {
           title: Consumer<AppState>(
             builder: (context, state, child) {
               var queueName = _queues?.getElementById(state.currentQueue)?.name;
-              return queueName != null ? Text('RT - $queueName') : Text('RT');
+              return queueName != null
+                  ? Text('RT - $queueName')
+                  : const Text('RT');
             },
           ),
           actions: [
@@ -142,6 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: _tickets != null
             ? RefreshIndicator(
+                onRefresh: _getTickets,
                 child: CustomScrollView(
                   controller: _scrollController,
                   slivers: <Widget>[
@@ -157,9 +165,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                onRefresh: _getTickets,
               )
-            : Center(
+            : const Center(
                 child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
                 ),

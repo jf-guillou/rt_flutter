@@ -12,10 +12,10 @@ class CustomField extends ItemModel {
   static List<CustomField>? readJsonList(List<dynamic>? json) {
     if (json == null) return null;
 
-    List<CustomField> _items = [];
+    List<CustomField> items = [];
     for (var i in json) {
-      _items.add(CustomField.readJson(i));
+      items.add(CustomField.readJson(i));
     }
-    return _items;
+    return items;
   }
 }

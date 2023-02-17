@@ -13,16 +13,16 @@ class User extends ItemModel {
   static List<User>? readJsonList(List<dynamic>? json) {
     if (json == null) return null;
 
-    List<User> _items = [];
+    List<User> items = [];
     for (var i in json) {
-      _items.add(User.readJson(i));
+      items.add(User.readJson(i));
     }
-    return _items;
+    return items;
   }
 
   bool isIncomplete() => realName == null;
 
-  Future<User> fetch({force: false}) async {
+  Future<User> fetch({force = false}) async {
     assert(id != null);
 
     return isStale() || isIncomplete() || force

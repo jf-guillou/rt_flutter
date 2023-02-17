@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rt_flutter/screens/home_screen.dart';
@@ -9,40 +11,43 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rt_flutter/models/appstate_model.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  LoginScreenState createState() => LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreenState extends State<LoginScreen> {
   final WebViewController controller = WebViewController();
 
   @override
   void initState() {
     super.initState();
+    developer.log("initState");
     controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..addJavaScriptChannel("TokenExtractor", onMessageReceived: (message) {
         String token = message.message;
         Provider.of<AppState>(context, listen: false).token = token;
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => HomeScreen()));
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
       })
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {
-            print("WebView is loading (progress : $progress%)");
+            developer.log("WebView is loading (progress : $progress%)");
           },
           onPageStarted: (String url) {
-            print('Page started loading: $url');
+            developer.log('Page started loading: $url');
           },
           onPageFinished: (String url) {
-            print('Page finished loading: $url');
+            developer.log('Page finished loading: $url');
             controller.currentUrl().then((value) async {
               if (hasReachedTokensList(value)) {
                 String owner = await getUserID(controller);
                 PackageInfo packageInfo = await PackageInfo.fromPlatform();
                 String description =
-                    packageInfo.packageName + "_" + packageInfo.version;
+                    "${packageInfo.packageName}_${packageInfo.version}";
                 generateToken(controller, owner, description);
               }
             });
@@ -83,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   bool hasReachedTokensList(String? url) {
-    return url == tokenListUrl();
+    return url == tokenListUrl().toString();
   }
 
   Future<String> getUserID(WebViewController controller) async {
@@ -97,8 +102,6 @@ class _LoginScreenState extends State<LoginScreen> {
     String params = jsonEncode(
         {"Owner": ownerID, "Description": description, "Create": true});
     controller.runJavaScript(
-        'fetch("${tokenListUrl()}", { method: "POST", body: new URLSearchParams($params) }).then((response) => { ' +
-            'if (response.ok) { return response.text().then((text) => { ' +
-            'window.TokenExtractor.postMessage(text.match("(\\\\d+-\\\\d+-\\\\w+)")[0]) }) }})');
+        'fetch("${tokenListUrl()}", { method: "POST", body: new URLSearchParams($params) }).then((response) => { if (response.ok) { return response.text().then((text) => { window.TokenExtractor.postMessage(text.match("(\\\\d+-\\\\d+-\\\\w+)")[0]) }) }})');
   }
 }

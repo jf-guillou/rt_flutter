@@ -6,14 +6,10 @@ class TransactionListItem extends StatefulWidget {
   const TransactionListItem(this.t, {Key? key}) : super(key: key);
 
   @override
-  State<TransactionListItem> createState() => _TransactionListItemState(t.id);
+  State<TransactionListItem> createState() => TransactionListItemState();
 }
 
-class _TransactionListItemState extends State<TransactionListItem> {
-  final String? id;
-
-  _TransactionListItemState(this.id);
-
+class TransactionListItemState extends State<TransactionListItem> {
   @override
   void initState() {
     super.initState();

@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rt_flutter/models/api_config_model.dart';
@@ -7,16 +9,17 @@ import 'package:rt_flutter/screens/login_screen.dart';
 import 'package:rt_flutter/models/appstate_model.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
-  State<StatefulWidget> createState() {
-    return SplashScreenState();
-  }
+  State<StatefulWidget> createState() => SplashScreenState();
 }
 
 class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    developer.log("initState");
     Provider.of<AppState>(context, listen: false).addListener(_initState);
   }
 
@@ -31,9 +34,9 @@ class SplashScreenState extends State<SplashScreen> {
       ..setUrl('https://snps.univ-nantes.fr/rt');
 
     String? token = Provider.of<AppState>(context, listen: false).token;
-    print("_initAPIConfig:$token");
+    developer.log("_initAPIConfig:$token");
     if (token != null && token.isNotEmpty) {
-      print(token);
+      developer.log(token);
       APIService.instance.config?.setAuthToken(token);
     }
   }
@@ -45,11 +48,13 @@ class SplashScreenState extends State<SplashScreen> {
         throw Exception('Unexpected RT version : ${rt.version}');
       }
 
+      // ignore: use_build_context_synchronously
+      if (!context.mounted) return;
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => HomeScreen()));
+          MaterialPageRoute(builder: (context) => const HomeScreen()));
     } catch (e) {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => LoginScreen()));
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
     }
   }
 
@@ -66,7 +71,7 @@ class SplashScreenState extends State<SplashScreen> {
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.secondary,
                       decoration: TextDecoration.none))),
-          CircularProgressIndicator(
+          const CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
           ),
         ],

@@ -19,7 +19,6 @@ class APIConfig {
 
   void setUrl(String url) {
     uri = Uri.parse(url);
-    print(uri.toString());
     if (!uri!.isScheme("HTTPS")) {
       throw 'Non-https urls are unsupported';
     }

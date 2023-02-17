@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:developer' as developer;
 
 import 'package:http/http.dart' as http;
 import 'package:rt_flutter/models/api_config_model.dart';
@@ -61,7 +62,7 @@ class APIService {
   Future<Queue> fetchQueue(String id) async {
     assert(isUsable());
 
-    print('fetchQueue:$id');
+    developer.log('fetchQueue:$id');
     var response = await http.get(
         Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix/queue/$id'),
         headers: baseHeaders());
@@ -75,7 +76,7 @@ class APIService {
   Future<Paginable<Queue>> fetchQueues() async {
     assert(isUsable());
 
-    print('fetchQueues');
+    developer.log('fetchQueues');
     var response = await http.get(
         Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix/queues/all',
             {'fields': 'Name,Description'}),
@@ -91,7 +92,7 @@ class APIService {
   Future<RTSystemInfo> fetchRTSystemInfo() async {
     assert(isUsable());
 
-    print('fetchRTSystemInfo');
+    developer.log('fetchRTSystemInfo');
     var response = await http.get(
         Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix/rt'),
         headers: baseHeaders());
@@ -105,7 +106,7 @@ class APIService {
   Future<Ticket> fetchTicket(String? id) async {
     assert(isUsable());
 
-    print('fetchTicket:$id');
+    developer.log('fetchTicket:$id');
     var response = await http.get(
         Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix/ticket/$id'),
         headers: baseHeaders());
@@ -116,10 +117,11 @@ class APIService {
     }
   }
 
-  Future<Paginable<Ticket>> fetchTickets(String? queueId, {int page: 1}) async {
+  Future<Paginable<Ticket>> fetchTickets(String? queueId,
+      {int page = 1}) async {
     assert(isUsable());
 
-    print('fetchTickets:$queueId');
+    developer.log('fetchTickets:$queueId');
     var response = await http.get(
         Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix/tickets', {
           'query': 'Queue=$queueId',
@@ -140,7 +142,7 @@ class APIService {
   Future<Transaction> fetchTransaction(String id) async {
     assert(isUsable());
 
-    print('fetchTransaction:$id');
+    developer.log('fetchTransaction:$id');
     var response = await http.get(
         Uri.https(
             config!.uri!.host, '${config!.uri!.path}$prefix/transaction/$id'),
@@ -156,7 +158,7 @@ class APIService {
       String? ticketId) async {
     assert(isUsable());
 
-    print('fetchTransactionsForTicket:$ticketId');
+    developer.log('fetchTransactionsForTicket:$ticketId');
     var response = await http.get(
         Uri.https(
             config!.uri!.host,
@@ -175,7 +177,7 @@ class APIService {
       String? transactionId) async {
     assert(isUsable());
 
-    print('fetchAttachmentsForTransaction:$transactionId');
+    developer.log('fetchAttachmentsForTransaction:$transactionId');
     var response = await http.get(
         Uri.https(
             config!.uri!.host,
@@ -194,7 +196,7 @@ class APIService {
       String? ticketId) async {
     assert(isUsable());
 
-    print('fetchAttachmentsForTicket:$ticketId');
+    developer.log('fetchAttachmentsForTicket:$ticketId');
     var response = await http.get(
         Uri.https(
             config!.uri!.host,
@@ -212,7 +214,7 @@ class APIService {
   Future<User> fetchUser(String? id) async {
     assert(isUsable());
 
-    print('fetchUser:$id');
+    developer.log('fetchUser:$id');
     var response = await http.get(
         Uri.https(
             config!.uri!.host, '${config!.uri!.path}$prefix/transaction/$id'),
