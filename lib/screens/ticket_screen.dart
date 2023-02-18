@@ -52,11 +52,6 @@ class TicketScreenState extends State<TicketScreen> {
   _getHistory() async {
     var transactions =
         await APIService.instance.fetchTransactionsForTicket(widget.id);
-    if (mounted) {
-      setState(() {
-        _transactions = transactions;
-      });
-    }
     var attachments =
         await APIService.instance.fetchAttachmentsForTicket(widget.id);
     for (var a in attachments.items) {
