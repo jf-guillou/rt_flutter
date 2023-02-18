@@ -11,16 +11,16 @@ import 'package:rt_flutter/services/api_service.dart';
 
 final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class TicketsScreen extends StatefulWidget {
+  const TicketsScreen({super.key});
 
   @override
-  HomeScreenState createState() => HomeScreenState();
+  TicketsScreenState createState() => TicketsScreenState();
 }
 
 enum MenuItem { queues, help }
 
-class HomeScreenState extends State<HomeScreen> {
+class TicketsScreenState extends State<TicketsScreen> {
   Paginable<Queue>? _queues;
   Paginable<Ticket>? _tickets;
   final ScrollController _scrollController = ScrollController();

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rt_flutter/models/api_config_model.dart';
 import 'package:rt_flutter/services/api_service.dart';
-import 'package:rt_flutter/screens/home_screen.dart';
+import 'package:rt_flutter/screens/tickets_screen.dart';
 import 'package:rt_flutter/screens/login_screen.dart';
 import 'package:rt_flutter/models/appstate_model.dart';
 
@@ -51,7 +51,7 @@ class SplashScreenState extends State<SplashScreen> {
       // ignore: use_build_context_synchronously
       if (!context.mounted) return;
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const HomeScreen()));
+          MaterialPageRoute(builder: (context) => const TicketsScreen()));
     } catch (e) {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const LoginScreen()));
