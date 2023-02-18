@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 
 class TicketStateIcon extends StatelessWidget {
   final String? state;
+  final bool owned;
   final num size;
-  const TicketStateIcon(this.state, {Key? key, this.size = 24.0})
+  const TicketStateIcon(this.state, this.owned, {Key? key, this.size = 24.0})
       : super(key: key);
 
   IconData get icon {
     switch (state) {
       case 'resolved':
         return Icons.check_circle;
-      case 'new':
       case 'open':
-        return Icons.directions_run;
+        return Icons.circle;
+      case 'new':
+        return Icons.circle_outlined;
       case 'stalled':
         return Icons.access_time;
       case 'rejected':
+        return Icons.cancel;
       case 'deleted':
         return Icons.delete_forever;
       default:
@@ -30,7 +33,7 @@ class TicketStateIcon extends StatelessWidget {
       case 'new':
       case 'open':
       case 'stalled':
-        return Colors.orange;
+        return owned ? Colors.yellow : Colors.cyan;
       case 'rejected':
       case 'deleted':
         return Colors.red;

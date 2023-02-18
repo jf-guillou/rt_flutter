@@ -21,6 +21,7 @@ class User extends ItemModel {
   }
 
   bool isIncomplete() => realName == null;
+  bool isNobody() => id == "6";
 
   Future<User> fetch({force = false}) async {
     assert(id != null);

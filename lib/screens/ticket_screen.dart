@@ -92,7 +92,8 @@ class TicketScreenState extends State<TicketScreen> {
     return Scaffold(
       appBar: AppBar(
           title: Row(children: [
-        if (_ticket != null) TicketStateIcon(_ticket!.status),
+        if (_ticket != null)
+          TicketStateIcon(_ticket!.status, !_ticket!.owner.isNobody()),
         Text(' #${widget.id}'),
       ])),
       body: _ticket != null
@@ -109,7 +110,8 @@ class TicketScreenState extends State<TicketScreen> {
               for (var u in _ticket!.requestors!) Text('Requestor: ${u.id}'),
               for (var u in _ticket!.cc!) Text('CC: ${u.id}'),
               for (var u in _ticket!.adminCc!) Text('AdminCC: ${u.id}'),
-              Text('Owner: ${_ticket!.owner.id}'),
+              if (!_ticket!.owner.isNobody())
+                Text('Owner: ${_ticket!.owner.id}'),
               for (var cf in _ticket!.customFields!)
                 if (cf.values != null && cf.values!.isNotEmpty)
                   Text('${cf.name}: ${cf.values!.join(', ')}'),
