@@ -5,11 +5,11 @@ import 'package:rt_flutter/models/item_model.dart';
 typedef Itemizer<S> = S Function(Map<String, dynamic>? item);
 
 class Paginable<T extends ItemModel> extends BaseModel {
-  int? total;
-  int? count;
-  int? page;
-  int? pages;
-  int? perPage;
+  late int total;
+  late int count;
+  late int page;
+  late int pages;
+  late int perPage;
   late List<T> items;
 
   Paginable.readJson(Map<String, dynamic> json, Itemizer<T> itemizer)
@@ -32,7 +32,7 @@ class Paginable<T extends ItemModel> extends BaseModel {
 
   Paginable<T> mergeWith(Paginable<T> p) {
     total = p.total;
-    count = count! + p.count!;
+    count = count + p.count;
     page = p.page;
     pages = p.pages;
     items.addAll(p.items);

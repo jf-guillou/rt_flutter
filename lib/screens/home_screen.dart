@@ -33,7 +33,8 @@ class HomeScreenState extends State<HomeScreen> {
     _getTickets();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+              _scrollController.position.maxScrollExtent &&
+          _tickets!.count < _tickets!.total) {
         _appendTickets();
       }
     });
@@ -67,8 +68,9 @@ class HomeScreenState extends State<HomeScreen> {
 
   Future<void> _appendTickets() async {
     var provider = Provider.of<AppState>(context, listen: false);
+    var page = _tickets!.page + 1;
     var tickets = await APIService.instance
-        .fetchTickets(provider.currentQueue, page: _tickets!.page! + 1);
+        .fetchTickets(provider.currentQueue, page: page);
     if (mounted) {
       setState(() {
         _tickets!.mergeWith(tickets);
@@ -157,7 +159,7 @@ class HomeScreenState extends State<HomeScreen> {
                       itemExtent: 80.0,
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
-                          return index < _tickets!.count!
+                          return index < _tickets!.count
                               ? TicketListItem(_tickets!.items.elementAt(index))
                               : null;
                         },
