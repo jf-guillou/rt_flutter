@@ -1,9 +1,10 @@
-import 'dart:developer' as developer;
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rt_flutter/components/ticket_state_icon.dart';
 import 'package:rt_flutter/components/transaction_listitem.dart';
+import 'package:rt_flutter/models/attachment_model.dart';
 import 'package:rt_flutter/models/paginable_model.dart';
 import 'package:rt_flutter/models/ticket_model.dart';
 import 'package:rt_flutter/models/transaction_model.dart';
@@ -20,14 +21,23 @@ class TicketScreen extends StatefulWidget {
 class TicketScreenState extends State<TicketScreen> {
   Ticket? _ticket;
   Paginable<Transaction>? _transactions;
+  Paginable<Attachment>? _attachments;
+  final ScrollController _scrollController = ScrollController();
   DateFormat df = DateFormat('dd/MM/y HH:mm');
 
   @override
   void initState() {
     super.initState();
-    developer.log("initState");
+    log("TicketScreen:initState");
     _getTicket();
     _getHistory();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+              _scrollController.position.maxScrollExtent &&
+          _transactions!.count < _transactions!.total) {
+        _appendHistory();
+      }
+    });
   }
 
   _getTicket() async {
@@ -42,6 +52,11 @@ class TicketScreenState extends State<TicketScreen> {
   _getHistory() async {
     var transactions =
         await APIService.instance.fetchTransactionsForTicket(widget.id);
+    if (mounted) {
+      setState(() {
+        _transactions = transactions;
+      });
+    }
     var attachments =
         await APIService.instance.fetchAttachmentsForTicket(widget.id);
     for (var a in attachments.items) {
@@ -50,6 +65,24 @@ class TicketScreenState extends State<TicketScreen> {
     if (mounted) {
       setState(() {
         _transactions = transactions;
+        _attachments = attachments;
+      });
+    }
+  }
+
+  Future<void> _appendHistory() async {
+    var page = _transactions!.page + 1;
+    var transactions = await APIService.instance
+        .fetchTransactionsForTicket(widget.id, page: page);
+    var attachments = await APIService.instance
+        .fetchAttachmentsForTicket(widget.id, page: page);
+    for (var a in attachments.items) {
+      transactions.getElementById(a.transactionId)!.attachments!.add(a);
+    }
+    if (mounted) {
+      setState(() {
+        _transactions!.mergeWith(transactions);
+        _attachments!.mergeWith(attachments);
       });
     }
   }
@@ -83,18 +116,15 @@ class TicketScreenState extends State<TicketScreen> {
               _transactions != null
                   ? Expanded(
                       child: CustomScrollView(
+                        controller: _scrollController,
                         slivers: <Widget>[
                           SliverList(
                             delegate: SliverChildBuilderDelegate(
                               (BuildContext context, int index) {
-                                if (index >= _transactions!.count!) {
+                                if (index >= _transactions!.count) {
                                   return null;
                                 }
                                 var t = _transactions!.items.elementAt(index);
-                                // Hide plain email sent records
-                                // if (t.tType == "EmailRecord") {
-                                //   return null;
-                                // }
                                 return TransactionListItem(t);
                               },
                             ),
