@@ -130,6 +130,17 @@ class TicketsScreenState extends State<TicketsScreen> {
             },
           ),
           actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              tooltip: 'Rechercher',
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Not implemented'),
+                  ),
+                );
+              },
+            ),
             PopupMenuButton<MenuItem>(
               onSelected: (MenuItem item) {
                 switch (item) {
