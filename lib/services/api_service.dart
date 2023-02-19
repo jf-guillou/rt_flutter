@@ -23,6 +23,10 @@ class APIService {
     return config != null && config!.isUsable();
   }
 
+  Uri _uri(String path) {
+    return Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix$path');
+  }
+
   Future<bool> ping() async {
     assert(config != null && config!.isConnectable());
 
@@ -225,6 +229,34 @@ class APIService {
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return User.readJson(json.decode(response.body));
+    } else {
+      throw 'Unexpected status code : ${response.statusCode}';
+    }
+  }
+
+  Future<bool> takeTicket(String? id) async {
+    assert(isUsable());
+
+    developer.log('takeTicket:$id');
+    var response =
+        await http.put(_uri('/transaction/$id'), headers: baseHeaders());
+    if (response.statusCode == HttpStatus.ok) {
+      developer.log(response.body);
+      return true;
+    } else {
+      throw 'Unexpected status code : ${response.statusCode}';
+    }
+  }
+
+  Future<bool> untakeTicket(String? id) async {
+    assert(isUsable());
+
+    developer.log('takeTicket:$id');
+    var response =
+        await http.put(_uri('/transaction/$id'), headers: baseHeaders());
+    if (response.statusCode == HttpStatus.ok) {
+      developer.log(response.body);
+      return true;
     } else {
       throw 'Unexpected status code : ${response.statusCode}';
     }

@@ -16,7 +16,7 @@ class TicketListItem extends StatelessWidget {
       },
       title: Row(
         children: [
-          TicketStateIcon(t.status, !t.owner.isNobody(), size: 16.0),
+          TicketStateIcon(t.status, t.isOwned(), size: 16.0),
           Text(' #${t.id}'),
         ],
       ),

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:rt_flutter/components/ticket_state_icon.dart';
 import 'package:rt_flutter/components/transaction_listitem.dart';
 import 'package:rt_flutter/models/attachment_model.dart';
@@ -9,6 +10,8 @@ import 'package:rt_flutter/models/paginable_model.dart';
 import 'package:rt_flutter/models/ticket_model.dart';
 import 'package:rt_flutter/models/transaction_model.dart';
 import 'package:rt_flutter/services/api_service.dart';
+
+import '../models/appstate_model.dart';
 
 class TicketScreen extends StatefulWidget {
   final String? id;
@@ -40,7 +43,7 @@ class TicketScreenState extends State<TicketScreen> {
     });
   }
 
-  _getTicket() async {
+  Future<void> _getTicket() async {
     var ticket = await APIService.instance.fetchTicket(widget.id);
     if (mounted) {
       setState(() {
@@ -49,7 +52,7 @@ class TicketScreenState extends State<TicketScreen> {
     }
   }
 
-  _getHistory() async {
+  Future<void> _getHistory() async {
     var transactions =
         await APIService.instance.fetchTransactionsForTicket(widget.id);
     var attachments =
@@ -82,13 +85,21 @@ class TicketScreenState extends State<TicketScreen> {
     }
   }
 
+  Future<void> _take() async {
+    log("take");
+    await APIService.instance.takeTicket(widget.id);
+    _getTicket();
+  }
+
+  Future<void> _respond() async {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
           title: Row(children: [
         if (_ticket != null)
-          TicketStateIcon(_ticket!.status, !_ticket!.owner.isNobody()),
+          TicketStateIcon(_ticket!.status, _ticket!.isOwned()),
         Text(' #${widget.id}'),
       ])),
       body: _ticket != null
@@ -105,8 +116,7 @@ class TicketScreenState extends State<TicketScreen> {
               for (var u in _ticket!.requestors!) Text('Requestor: ${u.id}'),
               for (var u in _ticket!.cc!) Text('CC: ${u.id}'),
               for (var u in _ticket!.adminCc!) Text('AdminCC: ${u.id}'),
-              if (!_ticket!.owner.isNobody())
-                Text('Owner: ${_ticket!.owner.id}'),
+              if (_ticket!.isOwned()) Text('Owner: ${_ticket!.owner.id}'),
               for (var cf in _ticket!.customFields!)
                 if (cf.values != null && cf.values!.isNotEmpty)
                   Text('${cf.name}: ${cf.values!.join(', ')}'),
@@ -141,6 +151,15 @@ class TicketScreenState extends State<TicketScreen> {
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
               ),
             ),
+      floatingActionButton: _ticket != null
+          ? FloatingActionButton(
+              onPressed: () {
+                _ticket!.isOwned() ? _take() : _respond();
+              },
+              child: Icon(_ticket!.isOwned()
+                  ? Icons.edit
+                  : Icons.shopping_cart_outlined))
+          : null,
     );
   }
 }

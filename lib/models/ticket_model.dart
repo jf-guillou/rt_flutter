@@ -38,4 +38,6 @@ class Ticket extends ItemModel {
     resolved = parseDate(json['Resolved']);
     customFields = CustomField.readJsonList(json['CustomFields']);
   }
+
+  bool isOwned() => !owner.isNobody();
 }
