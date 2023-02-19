@@ -239,7 +239,7 @@ class APIService {
 
     developer.log('takeTicket:$id');
     var response =
-        await http.put(_uri('/transaction/$id'), headers: baseHeaders());
+        await http.put(_uri('/ticket/$id/take'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       developer.log(response.body);
       return true;
@@ -251,9 +251,23 @@ class APIService {
   Future<bool> untakeTicket(String? id) async {
     assert(isUsable());
 
-    developer.log('takeTicket:$id');
+    developer.log('untakeTicket:$id');
     var response =
-        await http.put(_uri('/transaction/$id'), headers: baseHeaders());
+        await http.put(_uri('/ticket/$id/untake'), headers: baseHeaders());
+    if (response.statusCode == HttpStatus.ok) {
+      developer.log(response.body);
+      return true;
+    } else {
+      throw 'Unexpected status code : ${response.statusCode}';
+    }
+  }
+
+  Future<bool> stealTicket(String? id) async {
+    assert(isUsable());
+
+    developer.log('stealTicket:$id');
+    var response =
+        await http.put(_uri('/ticket/$id/steal'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       developer.log(response.body);
       return true;

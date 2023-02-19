@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:rt_flutter/components/ticket_state_icon.dart';
 import 'package:rt_flutter/components/transaction_listitem.dart';
 import 'package:rt_flutter/models/attachment_model.dart';
@@ -11,8 +10,6 @@ import 'package:rt_flutter/models/ticket_model.dart';
 import 'package:rt_flutter/models/transaction_model.dart';
 import 'package:rt_flutter/services/api_service.dart';
 
-import '../models/appstate_model.dart';
-
 class TicketScreen extends StatefulWidget {
   final String? id;
   const TicketScreen(this.id, {super.key});
@@ -20,6 +17,8 @@ class TicketScreen extends StatefulWidget {
   @override
   TicketScreenState createState() => TicketScreenState();
 }
+
+enum MenuItem { take, untake, steal, respond, comment }
 
 class TicketScreenState extends State<TicketScreen> {
   Ticket? _ticket;
@@ -91,17 +90,67 @@ class TicketScreenState extends State<TicketScreen> {
     _getTicket();
   }
 
+  Future<void> _untake() async {
+    log("untake");
+    await APIService.instance.untakeTicket(widget.id);
+    _getTicket();
+  }
+
+  Future<void> _steal() async {
+    log("steal");
+    await APIService.instance.stealTicket(widget.id);
+    _getTicket();
+  }
+
   Future<void> _respond() async {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Row(children: [
-        if (_ticket != null)
-          TicketStateIcon(_ticket!.status, _ticket!.isOwned()),
-        Text(' #${widget.id}'),
-      ])),
+        title: Row(children: [
+          if (_ticket != null)
+            TicketStateIcon(_ticket!.status, _ticket!.isOwned()),
+          Text(' #${widget.id}'),
+        ]),
+        actions: [
+          PopupMenuButton<MenuItem>(
+            onSelected: (MenuItem item) {
+              switch (item) {
+                case MenuItem.take:
+                  _take();
+                  break;
+                case MenuItem.untake:
+                  _untake();
+                  break;
+                case MenuItem.steal:
+                  _steal();
+                  break;
+                case MenuItem.respond:
+                  // TODO: Handle this case.
+                  break;
+                case MenuItem.comment:
+                  // TODO: Handle this case.
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
+              const PopupMenuItem<MenuItem>(
+                value: MenuItem.take,
+                child: Text('Take'),
+              ),
+              const PopupMenuItem<MenuItem>(
+                value: MenuItem.untake,
+                child: Text('Untake'),
+              ),
+              const PopupMenuItem<MenuItem>(
+                value: MenuItem.steal,
+                child: Text('Steal'),
+              )
+            ],
+          )
+        ],
+      ),
       body: _ticket != null
           ? Column(children: [
               Padding(
