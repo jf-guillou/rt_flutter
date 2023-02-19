@@ -25,7 +25,7 @@ class TicketScreenState extends State<TicketScreen> {
   Paginable<Transaction>? _transactions;
   Paginable<Attachment>? _attachments;
   final ScrollController _scrollController = ScrollController();
-  DateFormat df = DateFormat('dd/MM/y HH:mm');
+  DateFormat df = DateFormat.yMd().add_Hms();
 
   @override
   void initState() {
