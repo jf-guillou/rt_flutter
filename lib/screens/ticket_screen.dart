@@ -60,7 +60,7 @@ class TicketScreenState extends State<TicketScreen> {
     var attachments =
         await APIService.instance.fetchAttachmentsForTicket(widget.id);
     for (var a in attachments.items) {
-      transactions.getElementById(a.transactionId)!.attachments!.add(a);
+      transactions.getElementById(a.transactionId)?.attachments!.add(a);
     }
     if (mounted) {
       setState(() {

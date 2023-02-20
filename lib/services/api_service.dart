@@ -150,7 +150,8 @@ class APIService {
     }
   }
 
-  Future<Paginable<Transaction>> fetchTransactionsForTicket(String? ticketId,
+  // DEPRECATED
+  Future<Paginable<Transaction>> fetchHistoryForTicket(String? ticketId,
       {int page = 1}) async {
     assert(isUsable());
 
@@ -158,6 +159,26 @@ class APIService {
     var response = await http.get(
         _uri('/ticket/$ticketId/history', {
           'fields': 'Created,Creator,Type,Data,Field,OldValue,NewValue',
+          'page': '$page'
+        }),
+        headers: baseHeaders());
+    if (response.statusCode == HttpStatus.ok) {
+      return Paginable<Transaction>.readJson(
+          json.decode(response.body), (item) => Transaction.readJson(item));
+    } else {
+      throw 'Unexpected status code : ${response.statusCode}';
+    }
+  }
+
+  Future<Paginable<Transaction>> fetchTransactionsForTicket(String? ticketId,
+      {int page = 1}) async {
+    assert(isUsable());
+
+    log('fetchTransactionsForTicket:$ticketId');
+    var response = await http.get(
+        _uri('/transactions', {
+          'fields': 'Created,Creator,Type,Data,Field,OldValue,NewValue',
+          'query': 'ObjectId=$ticketId AND Type!=EmailRecord',
           'page': '$page'
         }),
         headers: baseHeaders());

@@ -17,14 +17,26 @@ class TransactionListItemState extends State<TransactionListItem> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(widget.t.tType!),
-      subtitle: Text(widget.t.attachments != null
-          ? widget.t.attachments!
-              .where((e) => e.contentType == "text/plain")
-              .map((e) => e.content)
-              .join("___")
-          : "_0"),
-    );
+    switch (widget.t.tType) {
+      case "Set":
+      case "Status":
+        return ListTile(
+            title: Text("${widget.t.tType}:${widget.t.field}"),
+            subtitle: Text("${widget.t.oldValue} ➡️ ${widget.t.newValue}"));
+      case "AddWatcher":
+      case "SetWatcher":
+        return ListTile(
+            title: Text("${widget.t.tType}:${widget.t.field}"),
+            subtitle: Text("${widget.t.oldValue} ➡️ ${widget.t.newValue}"));
+      default:
+        return ListTile(
+            title: Text(widget.t.tType!),
+            subtitle: widget.t.attachments != null
+                ? Text(widget.t.attachments!
+                    .where((e) => e.contentType == "text/plain")
+                    .map((e) => e.content)
+                    .join("\n"))
+                : null);
+    }
   }
 }
