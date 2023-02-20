@@ -208,8 +208,7 @@ class APIService {
     assert(isUsable());
 
     log('fetchUser:$id');
-    var response =
-        await http.get(_uri('/transaction/$id'), headers: baseHeaders());
+    var response = await http.get(_uri('/user/$id'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return User.readJson(json.decode(response.body));
     } else {

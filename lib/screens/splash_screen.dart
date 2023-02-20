@@ -20,16 +20,30 @@ class SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     log("SplashScreen:initState");
-    Provider.of<AppState>(context, listen: false).addListener(_initState);
+    Provider.of<AppState>(context, listen: false).addListener(_postPrefs);
   }
 
-  void _initState() {
-    Provider.of<AppState>(context, listen: false).removeListener(_initState);
+  void _postPrefs() async {
+    log("SplashScreen:_postPrefs");
+    var appState = Provider.of<AppState>(context, listen: false)
+      ..removeListener(_postPrefs);
     _initAPIConfig();
-    _testConnectivity();
+
+    try {
+      await _testConnectivity();
+      _fetchUserNameIfNecessary(appState);
+
+      // ignore: use_build_context_synchronously
+      if (!context.mounted) return;
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const TicketsScreen()));
+    } catch (e) {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
+    }
   }
 
-  _initAPIConfig() {
+  void _initAPIConfig() {
     APIService.instance.config = APIConfig()
       ..setUrl('https://snps.univ-nantes.fr/rt');
 
@@ -41,20 +55,24 @@ class SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  _testConnectivity() async {
-    try {
-      var rt = await APIService.instance.fetchRTSystemInfo();
-      if (!rt.isValidVersion()) {
-        throw Exception('Unexpected RT version : ${rt.version}');
-      }
+  Future<void> _testConnectivity() async {
+    log("_testConnectivity");
+    if (!APIService.instance.isUsable()) {
+      throw Exception('API credentials are invalid');
+    }
 
-      // ignore: use_build_context_synchronously
-      if (!context.mounted) return;
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const TicketsScreen()));
-    } catch (e) {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const LoginScreen()));
+    // Check connectivity and version
+    var rt = await APIService.instance.fetchRTSystemInfo();
+    if (!rt.isValidVersion()) {
+      throw Exception('Unexpected RT version : ${rt.version}');
+    }
+  }
+
+  Future<void> _fetchUserNameIfNecessary(AppState appState) async {
+    if (appState.username == null || appState.username == "") {
+      var user = await APIService.instance.fetchUser(appState.uid);
+      log("_fetchUserNameIfNecessary:${user.username}");
+      appState.username = user.username;
     }
   }
 
