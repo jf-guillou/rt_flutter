@@ -23,8 +23,9 @@ class APIService {
     return config != null && config!.isUsable();
   }
 
-  Uri _uri(String path) {
-    return Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix$path');
+  Uri _uri(String path, [Map<String, dynamic>? queryParameters]) {
+    return Uri.https(
+        config!.uri!.host, '${config!.uri!.path}$prefix$path', queryParameters);
   }
 
   Future<bool> ping() async {
@@ -54,10 +55,8 @@ class APIService {
     assert(isUsable());
 
     log('fetchAttachment:$id');
-    var response = await http.get(
-        Uri.https(
-            config!.uri!.host, '${config!.uri!.path}$prefix/attachment/$id'),
-        headers: baseHeaders());
+    var response =
+        await http.get(_uri('/attachment/$id'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Attachment.readJson(json.decode(response.body));
     } else {
@@ -69,9 +68,7 @@ class APIService {
     assert(isUsable());
 
     log('fetchQueue:$id');
-    var response = await http.get(
-        Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix/queue/$id'),
-        headers: baseHeaders());
+    var response = await http.get(_uri('/queue/$id'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Queue.readJson(json.decode(response.body));
     } else {
@@ -84,8 +81,7 @@ class APIService {
 
     log('fetchQueues');
     var response = await http.get(
-        Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix/queues/all',
-            {'fields': 'Name,Description'}),
+        _uri('/queues/all', {'fields': 'Name,Description'}),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Paginable<Queue>.readJson(
@@ -99,9 +95,7 @@ class APIService {
     assert(isUsable());
 
     log('fetchRTSystemInfo');
-    var response = await http.get(
-        Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix/rt'),
-        headers: baseHeaders());
+    var response = await http.get(_uri('/rt'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return RTSystemInfo.readJson(json.decode(response.body));
     } else {
@@ -113,9 +107,7 @@ class APIService {
     assert(isUsable());
 
     log('fetchTicket:$id');
-    var response = await http.get(
-        Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix/ticket/$id'),
-        headers: baseHeaders());
+    var response = await http.get(_uri('/ticket/$id'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Ticket.readJson(json.decode(response.body));
     } else {
@@ -129,7 +121,7 @@ class APIService {
 
     log('fetchTickets:$queueId');
     var response = await http.get(
-        Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix/tickets', {
+        _uri('/tickets', {
           'query': 'Queue=$queueId',
           'page': '$page',
           'fields': 'Subject,Status,Owner',
@@ -149,10 +141,8 @@ class APIService {
     assert(isUsable());
 
     log('fetchTransaction:$id');
-    var response = await http.get(
-        Uri.https(
-            config!.uri!.host, '${config!.uri!.path}$prefix/transaction/$id'),
-        headers: baseHeaders());
+    var response =
+        await http.get(_uri('/transaction/$id'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Transaction.readJson(json.decode(response.body));
     } else {
@@ -166,8 +156,7 @@ class APIService {
 
     log('fetchTransactionsForTicket:$ticketId');
     var response = await http.get(
-        Uri.https(config!.uri!.host,
-            '${config!.uri!.path}$prefix/ticket/$ticketId/history', {
+        _uri('/ticket/$ticketId/history', {
           'fields': 'Created,Creator,Type,Data,Field,OldValue,NewValue',
           'page': '$page'
         }),
@@ -187,9 +176,7 @@ class APIService {
 
     log('fetchAttachmentsForTransaction:$transactionId');
     var response = await http.get(
-        Uri.https(
-            config!.uri!.host,
-            '${config!.uri!.path}$prefix/transaction/$transactionId/attachments',
+        _uri('/transaction/$transactionId/attachments',
             {'fields': 'ContentType,Content', 'page': '$page'}),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
@@ -206,9 +193,7 @@ class APIService {
 
     log('fetchAttachmentsForTicket:$ticketId');
     var response = await http.get(
-        Uri.https(
-            config!.uri!.host,
-            '${config!.uri!.path}$prefix/ticket/$ticketId/attachments',
+        _uri('/ticket/$ticketId/attachments',
             {'fields': 'ContentType,Content,TransactionId', 'page': '$page'}),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
@@ -223,10 +208,8 @@ class APIService {
     assert(isUsable());
 
     log('fetchUser:$id');
-    var response = await http.get(
-        Uri.https(
-            config!.uri!.host, '${config!.uri!.path}$prefix/transaction/$id'),
-        headers: baseHeaders());
+    var response =
+        await http.get(_uri('/transaction/$id'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return User.readJson(json.decode(response.body));
     } else {
