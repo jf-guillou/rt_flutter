@@ -7,7 +7,8 @@ class RTSystemInfo extends BaseModel {
     version = json['Version'];
   }
 
-  bool isValid() {
+  bool isValidVersion() {
+    if (version == null) return false;
     return version!.startsWith('4') || version!.startsWith('5');
   }
 }

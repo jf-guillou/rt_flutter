@@ -44,7 +44,7 @@ class SplashScreenState extends State<SplashScreen> {
   _testConnectivity() async {
     try {
       var rt = await APIService.instance.fetchRTSystemInfo();
-      if (!rt.isValid()) {
+      if (!rt.isValidVersion()) {
         throw Exception('Unexpected RT version : ${rt.version}');
       }
 
