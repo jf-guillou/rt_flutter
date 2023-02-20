@@ -96,11 +96,6 @@ class TicketScreenState extends State<TicketScreen> {
         Provider.of<AppState>(context, listen: false).id;
   }
 
-  bool _canSteal() {
-    return !_ticket!.owner.isNobody() &&
-        _ticket!.owner.id != Provider.of<AppState>(context, listen: false).id;
-  }
-
   Future<void> _take() async {
     log("take");
     await APIService.instance.takeTicket(widget.id);
@@ -120,6 +115,7 @@ class TicketScreenState extends State<TicketScreen> {
   }
 
   Future<void> _respond() async {}
+  Future<void> _comment() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -144,25 +140,35 @@ class TicketScreenState extends State<TicketScreen> {
                   _steal();
                   break;
                 case MenuItem.respond:
-                  // TODO: Handle this case.
+                  _respond();
                   break;
                 case MenuItem.comment:
-                  // TODO: Handle this case.
+                  _comment();
                   break;
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<MenuItem>>[
+              _canTake()
+                  ? const PopupMenuItem<MenuItem>(
+                      value: MenuItem.take,
+                      child: Text('Take'),
+                    )
+                  : _canUntake()
+                      ? const PopupMenuItem<MenuItem>(
+                          value: MenuItem.untake,
+                          child: Text('Untake'),
+                        )
+                      : const PopupMenuItem<MenuItem>(
+                          value: MenuItem.steal,
+                          child: Text('Steal'),
+                        ),
               const PopupMenuItem<MenuItem>(
-                value: MenuItem.take,
-                child: Text('Take'),
+                value: MenuItem.respond,
+                child: Text('Respond'),
               ),
               const PopupMenuItem<MenuItem>(
-                value: MenuItem.untake,
-                child: Text('Untake'),
-              ),
-              const PopupMenuItem<MenuItem>(
-                value: MenuItem.steal,
-                child: Text('Steal'),
+                value: MenuItem.comment,
+                child: Text('Comment'),
               )
             ],
           )
