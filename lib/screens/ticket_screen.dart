@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:rt_flutter/components/ticket_state_icon.dart';
 import 'package:rt_flutter/components/transaction_listitem.dart';
 import 'package:rt_flutter/models/attachment_model.dart';
@@ -9,6 +10,8 @@ import 'package:rt_flutter/models/paginable_model.dart';
 import 'package:rt_flutter/models/ticket_model.dart';
 import 'package:rt_flutter/models/transaction_model.dart';
 import 'package:rt_flutter/services/api_service.dart';
+
+import '../models/appstate_model.dart';
 
 class TicketScreen extends StatefulWidget {
   final String? id;
@@ -82,6 +85,20 @@ class TicketScreenState extends State<TicketScreen> {
         _attachments!.mergeWith(attachments);
       });
     }
+  }
+
+  bool _canTake() {
+    return _ticket!.owner.isNobody();
+  }
+
+  bool _canUntake() {
+    return _ticket!.owner.id ==
+        Provider.of<AppState>(context, listen: false).id;
+  }
+
+  bool _canSteal() {
+    return !_ticket!.owner.isNobody() &&
+        _ticket!.owner.id != Provider.of<AppState>(context, listen: false).id;
   }
 
   Future<void> _take() async {
@@ -203,11 +220,9 @@ class TicketScreenState extends State<TicketScreen> {
       floatingActionButton: _ticket != null
           ? FloatingActionButton(
               onPressed: () {
-                _ticket!.isOwned() ? _take() : _respond();
+                _canTake() ? _take() : _respond();
               },
-              child: Icon(_ticket!.isOwned()
-                  ? Icons.edit
-                  : Icons.shopping_cart_outlined))
+              child: Icon(_canTake() ? Icons.shopping_cart : Icons.edit))
           : null,
     );
   }

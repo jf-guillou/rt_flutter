@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppState extends ChangeNotifier {
   String? _currentQueueId;
   String? _token;
-  String? _username;
+  String? _id;
   String? uid;
 
   AppState() {
@@ -18,7 +18,7 @@ class AppState extends ChangeNotifier {
     if (token != null) {
       uid = tokenToUserId(token!);
     }
-    _username = prefs.getString('username');
+    _id = prefs.getString('username');
     notifyListeners();
   }
 
@@ -45,14 +45,14 @@ class AppState extends ChangeNotifier {
         .then((prefs) => prefs.setString('token', token ?? ""));
   }
 
-  set username(String? username) {
-    _username = username;
+  set id(String? id) {
+    _id = id;
     notifyListeners();
     SharedPreferences.getInstance()
-        .then((prefs) => prefs.setString('username', username ?? ""));
+        .then((prefs) => prefs.setString('id', id ?? ""));
   }
 
   String? get currentQueue => _currentQueueId;
   String? get token => _token;
-  String? get username => _username;
+  String? get id => _id;
 }
