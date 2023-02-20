@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +19,7 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    developer.log("initState");
+    log("SplashScreen:initState");
     Provider.of<AppState>(context, listen: false).addListener(_initState);
   }
 
@@ -34,9 +34,9 @@ class SplashScreenState extends State<SplashScreen> {
       ..setUrl('https://snps.univ-nantes.fr/rt');
 
     String? token = Provider.of<AppState>(context, listen: false).token;
-    developer.log("_initAPIConfig:$token");
+    log("_initAPIConfig:$token");
     if (token != null && token.isNotEmpty) {
-      developer.log(token);
+      log(token);
       APIService.instance.config?.setAuthToken(token);
     }
   }

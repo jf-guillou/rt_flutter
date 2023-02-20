@@ -1,4 +1,4 @@
-import 'dart:developer' as developer;
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +28,7 @@ class TicketsScreenState extends State<TicketsScreen> {
   @override
   void initState() {
     super.initState();
-    developer.log("initState");
+    log("TicketsScreen:initState");
     _getQueues();
     _getTickets();
     _scrollController.addListener(() {

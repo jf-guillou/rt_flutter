@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:developer' as developer;
+import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 import 'package:rt_flutter/models/api_config_model.dart';
@@ -30,7 +30,7 @@ class APIService {
   Future<bool> ping() async {
     assert(config != null && config!.isConnectable());
 
-    developer.log('ping');
+    log('ping');
     var response = await http
         .get(Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix/rt'));
     if (response.statusCode == HttpStatus.unauthorized) {
@@ -53,7 +53,7 @@ class APIService {
   Future<Attachment> fetchAttachment(String id) async {
     assert(isUsable());
 
-    developer.log('fetchAttachment:$id');
+    log('fetchAttachment:$id');
     var response = await http.get(
         Uri.https(
             config!.uri!.host, '${config!.uri!.path}$prefix/attachment/$id'),
@@ -68,7 +68,7 @@ class APIService {
   Future<Queue> fetchQueue(String id) async {
     assert(isUsable());
 
-    developer.log('fetchQueue:$id');
+    log('fetchQueue:$id');
     var response = await http.get(
         Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix/queue/$id'),
         headers: baseHeaders());
@@ -82,7 +82,7 @@ class APIService {
   Future<Paginable<Queue>> fetchQueues() async {
     assert(isUsable());
 
-    developer.log('fetchQueues');
+    log('fetchQueues');
     var response = await http.get(
         Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix/queues/all',
             {'fields': 'Name,Description'}),
@@ -98,7 +98,7 @@ class APIService {
   Future<RTSystemInfo> fetchRTSystemInfo() async {
     assert(isUsable());
 
-    developer.log('fetchRTSystemInfo');
+    log('fetchRTSystemInfo');
     var response = await http.get(
         Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix/rt'),
         headers: baseHeaders());
@@ -112,7 +112,7 @@ class APIService {
   Future<Ticket> fetchTicket(String? id) async {
     assert(isUsable());
 
-    developer.log('fetchTicket:$id');
+    log('fetchTicket:$id');
     var response = await http.get(
         Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix/ticket/$id'),
         headers: baseHeaders());
@@ -127,7 +127,7 @@ class APIService {
       {int page = 1}) async {
     assert(isUsable());
 
-    developer.log('fetchTickets:$queueId');
+    log('fetchTickets:$queueId');
     var response = await http.get(
         Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix/tickets', {
           'query': 'Queue=$queueId',
@@ -148,7 +148,7 @@ class APIService {
   Future<Transaction> fetchTransaction(String id) async {
     assert(isUsable());
 
-    developer.log('fetchTransaction:$id');
+    log('fetchTransaction:$id');
     var response = await http.get(
         Uri.https(
             config!.uri!.host, '${config!.uri!.path}$prefix/transaction/$id'),
@@ -164,7 +164,7 @@ class APIService {
       {int page = 1}) async {
     assert(isUsable());
 
-    developer.log('fetchTransactionsForTicket:$ticketId');
+    log('fetchTransactionsForTicket:$ticketId');
     var response = await http.get(
         Uri.https(config!.uri!.host,
             '${config!.uri!.path}$prefix/ticket/$ticketId/history', {
@@ -185,7 +185,7 @@ class APIService {
       {int page = 1}) async {
     assert(isUsable());
 
-    developer.log('fetchAttachmentsForTransaction:$transactionId');
+    log('fetchAttachmentsForTransaction:$transactionId');
     var response = await http.get(
         Uri.https(
             config!.uri!.host,
@@ -204,7 +204,7 @@ class APIService {
       {int page = 1}) async {
     assert(isUsable());
 
-    developer.log('fetchAttachmentsForTicket:$ticketId');
+    log('fetchAttachmentsForTicket:$ticketId');
     var response = await http.get(
         Uri.https(
             config!.uri!.host,
@@ -222,7 +222,7 @@ class APIService {
   Future<User> fetchUser(String? id) async {
     assert(isUsable());
 
-    developer.log('fetchUser:$id');
+    log('fetchUser:$id');
     var response = await http.get(
         Uri.https(
             config!.uri!.host, '${config!.uri!.path}$prefix/transaction/$id'),
@@ -237,11 +237,11 @@ class APIService {
   Future<bool> takeTicket(String? id) async {
     assert(isUsable());
 
-    developer.log('takeTicket:$id');
+    log('takeTicket:$id');
     var response =
         await http.put(_uri('/ticket/$id/take'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
-      developer.log(response.body);
+      log(response.body);
       return true;
     } else {
       throw 'Unexpected status code : ${response.statusCode}';
@@ -251,11 +251,11 @@ class APIService {
   Future<bool> untakeTicket(String? id) async {
     assert(isUsable());
 
-    developer.log('untakeTicket:$id');
+    log('untakeTicket:$id');
     var response =
         await http.put(_uri('/ticket/$id/untake'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
-      developer.log(response.body);
+      log(response.body);
       return true;
     } else {
       throw 'Unexpected status code : ${response.statusCode}';
@@ -265,11 +265,11 @@ class APIService {
   Future<bool> stealTicket(String? id) async {
     assert(isUsable());
 
-    developer.log('stealTicket:$id');
+    log('stealTicket:$id');
     var response =
         await http.put(_uri('/ticket/$id/steal'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
-      developer.log(response.body);
+      log(response.body);
       return true;
     } else {
       throw 'Unexpected status code : ${response.statusCode}';

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer' as developer;
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +23,7 @@ class LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    developer.log("initState");
+    log("LoginScreen:initState");
     controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..addJavaScriptChannel("TokenExtractor", onMessageReceived: (message) {
@@ -35,13 +35,13 @@ class LoginScreenState extends State<LoginScreen> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {
-            developer.log("WebView is loading (progress : $progress%)");
+            log("WebView is loading (progress : $progress%)");
           },
           onPageStarted: (String url) {
-            developer.log('Page started loading: $url');
+            log('Page started loading: $url');
           },
           onPageFinished: (String url) {
-            developer.log('Page finished loading: $url');
+            log('Page finished loading: $url');
             controller.currentUrl().then((value) async {
               if (hasReachedTokensList(value)) {
                 String owner = await getUserID(controller);
