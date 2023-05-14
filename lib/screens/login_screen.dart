@@ -34,15 +34,13 @@ class LoginScreenState extends State<LoginScreen> {
       })
       ..setNavigationDelegate(
         NavigationDelegate(
-          onProgress: (int progress) {
-            log("WebView is loading (progress : $progress%)");
-          },
           onPageStarted: (String url) {
             log('Page started loading: $url');
           },
           onPageFinished: (String url) {
             log('Page finished loading: $url');
             controller.currentUrl().then((value) async {
+              log('Current url: $value');
               if (hasReachedTokensList(value)) {
                 String owner = await getUserID(controller);
                 PackageInfo packageInfo = await PackageInfo.fromPlatform();
