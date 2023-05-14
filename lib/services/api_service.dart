@@ -46,8 +46,8 @@ class APIService {
   Map<String, String> baseHeaders() {
     return {
       HttpHeaders.authorizationHeader: config!.authorizationHeader(),
-      // HttpHeaders.contentTypeHeader: 'application/json',
-      // HttpHeaders.acceptHeader: 'application/json',
+      HttpHeaders.contentTypeHeader: 'application/json',
+      HttpHeaders.acceptHeader: 'application/json',
     };
   }
 
