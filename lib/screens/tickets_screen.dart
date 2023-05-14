@@ -45,6 +45,7 @@ class TicketsScreenState extends State<TicketsScreen> {
     var queues = await APIService.instance.fetchQueues();
     if (queues.getElementById(provider.currentQueue) == null) {
       provider.currentQueue = queues.items.first.id;
+      _getTickets();
     }
     if (mounted) {
       setState(() {
@@ -58,6 +59,7 @@ class TicketsScreenState extends State<TicketsScreen> {
       _tickets = null;
     });
     var provider = Provider.of<AppState>(context, listen: false);
+    if (provider.currentQueue == null) return;
     var tickets =
         await APIService.instance.fetchTickets(provider.currentQueue!);
     if (mounted) {
@@ -69,6 +71,7 @@ class TicketsScreenState extends State<TicketsScreen> {
 
   Future<void> _appendTickets() async {
     var provider = Provider.of<AppState>(context, listen: false);
+    if (provider.currentQueue == null || _tickets == null) return;
     var page = _tickets!.page + 1;
     var tickets = await APIService.instance
         .fetchTickets(provider.currentQueue!, page: page);

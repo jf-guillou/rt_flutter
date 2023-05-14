@@ -27,6 +27,7 @@ class LoginScreenState extends State<LoginScreen> {
     controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..addJavaScriptChannel("TokenExtractor", onMessageReceived: (message) {
+        log('TokenExtractor');
         String token = message.message;
         Provider.of<AppState>(context, listen: false).token = token;
         Navigator.of(context).pushReplacement(
@@ -79,7 +80,7 @@ class LoginScreenState extends State<LoginScreen> {
       throw "Missing base uri";
     }
 
-    return APIService.instance.uri('/Prefs/AuthTokens.html');
+    return Uri.https(uri.host, '${uri.path}/Prefs/AuthTokens.html');
   }
 
   bool hasReachedTokensList(String? url) {
