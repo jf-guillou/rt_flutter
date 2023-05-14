@@ -50,7 +50,7 @@ class SplashScreenState extends State<SplashScreen> {
 
     // Fetch token or goto Login
     String? token = appState.token;
-    log("_postPrefs:token:$url");
+    log("_postPrefs:token:$token");
     if (token == null || token.isEmpty) {
       if (!context.mounted) return;
       Navigator.of(context).pushReplacement(

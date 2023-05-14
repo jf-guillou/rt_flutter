@@ -27,6 +27,8 @@ class AppDrawer extends StatelessWidget {
             ]),
           ),
           ListTile(
+            // TODO: disable if unusable API ?
+            // TODO: Check current Screen, avoid duplicate
             title: const Text('Tickets'),
             leading: const Icon(Icons.list),
             onTap: () {

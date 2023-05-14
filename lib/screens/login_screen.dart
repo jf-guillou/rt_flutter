@@ -30,6 +30,7 @@ class LoginScreenState extends State<LoginScreen> {
         log('TokenExtractor');
         String token = message.message;
         Provider.of<AppState>(context, listen: false).token = token;
+        APIService.instance.config.setAuthToken(token);
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const TicketsScreen()));
       })
