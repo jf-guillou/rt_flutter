@@ -16,22 +16,42 @@ class SplashScreen extends StatefulWidget {
 }
 
 class SplashScreenState extends State<SplashScreen> {
+  String _state = "";
+
   @override
   void initState() {
     super.initState();
     log("SplashScreen:initState");
+    setState(() {
+      _state = "Reading preferences";
+    });
     Provider.of<AppState>(context, listen: false).addListener(_postPrefs);
   }
 
   void _postPrefs() async {
     log("SplashScreen:_postPrefs");
-    var appState = Provider.of<AppState>(context, listen: false)
+    AppState appState = Provider.of<AppState>(context, listen: false)
       ..removeListener(_postPrefs);
-    _initAPIConfig();
+
+    setState(() {
+      _state = "Setup services";
+    });
+
+
+    setState(() {
+      _state = "Checking connectivity";
+    });
 
     try {
       await _testConnectivity();
+      setState(() {
+        _state = "Retrieving user data";
+      });
+
       _fetchUserNameIfNecessary(appState);
+      setState(() {
+        _state = "Starting";
+      });
 
       // ignore: use_build_context_synchronously
       if (!context.mounted) return;
@@ -91,6 +111,10 @@ class SplashScreenState extends State<SplashScreen> {
           const CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
           ),
+          Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Text(_state,
+                  style: const TextStyle(color: Colors.black, fontSize: 11.0))),
         ],
       ),
     );
