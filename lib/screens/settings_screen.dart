@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:rt_flutter/components/textfield_popup.dart';
+import 'package:rt_flutter/screens/login_screen.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:rt_flutter/services/api_service.dart';
@@ -69,6 +70,15 @@ class SettingsScreenState extends State<SettingsScreen> {
                                   setState(() => {});
                                 })),
                       }),
+              SettingsTile(
+                leading: const Icon(Icons.key),
+                title: const Text("Request Tracker API token"),
+                value:
+                    Text(appState.token ?? "not set - tap to initialize login"),
+                onPressed: (context) => Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen())),
+              ),
             ],
           ),
         ],

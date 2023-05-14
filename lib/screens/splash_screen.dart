@@ -54,7 +54,7 @@ class SplashScreenState extends State<SplashScreen> {
     if (token == null || token.isEmpty) {
       if (!context.mounted) return;
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const LoginScreen()));
+          MaterialPageRoute(builder: (context) => const SettingsScreen()));
       return;
     }
     APIService.instance.config.setAuthToken(token);
@@ -79,6 +79,7 @@ class SplashScreenState extends State<SplashScreen> {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const TicketsScreen()));
     } catch (e) {
+      // TODO: navigate to LoginScreen on connection failure is wrong
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const LoginScreen()));
     }
