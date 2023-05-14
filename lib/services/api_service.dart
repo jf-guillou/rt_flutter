@@ -23,7 +23,7 @@ class APIService {
     return config != null && config!.isUsable();
   }
 
-  Uri _uri(String path, [Map<String, dynamic>? queryParameters]) {
+  Uri uri(String path, [Map<String, dynamic>? queryParameters]) {
     return Uri.https(
         config!.uri!.host, '${config!.uri!.path}$prefix$path', queryParameters);
   }
@@ -56,7 +56,7 @@ class APIService {
 
     log('fetchAttachment:$id');
     var response =
-        await http.get(_uri('/attachment/$id'), headers: baseHeaders());
+        await http.get(uri('/attachment/$id'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Attachment.readJson(json.decode(response.body));
     } else {
@@ -68,7 +68,7 @@ class APIService {
     assert(isUsable());
 
     log('fetchQueue:$id');
-    var response = await http.get(_uri('/queue/$id'), headers: baseHeaders());
+    var response = await http.get(uri('/queue/$id'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Queue.readJson(json.decode(response.body));
     } else {
@@ -81,7 +81,7 @@ class APIService {
 
     log('fetchQueues');
     var response = await http.get(
-        _uri('/queues/all', {'fields': 'Name,Description'}),
+        uri('/queues/all', {'fields': 'Name,Description'}),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Paginable<Queue>.readJson(
@@ -95,7 +95,7 @@ class APIService {
     assert(isUsable());
 
     log('fetchRTSystemInfo');
-    var response = await http.get(_uri('/rt'), headers: baseHeaders());
+    var response = await http.get(uri('/rt'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return RTSystemInfo.readJson(json.decode(response.body));
     } else {
@@ -107,7 +107,7 @@ class APIService {
     assert(isUsable());
 
     log('fetchTicket:$id');
-    var response = await http.get(_uri('/ticket/$id'), headers: baseHeaders());
+    var response = await http.get(uri('/ticket/$id'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Ticket.readJson(json.decode(response.body));
     } else {
@@ -120,7 +120,7 @@ class APIService {
 
     log('fetchTickets:$queueId');
     var response = await http.get(
-        _uri('/tickets', {
+        uri('/tickets', {
           'query': 'Queue=$queueId',
           'page': '$page',
           'fields': 'Subject,Status,Owner',
@@ -141,7 +141,7 @@ class APIService {
 
     log('fetchTransaction:$id');
     var response =
-        await http.get(_uri('/transaction/$id'), headers: baseHeaders());
+        await http.get(uri('/transaction/$id'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return Transaction.readJson(json.decode(response.body));
     } else {
@@ -156,7 +156,7 @@ class APIService {
 
     log('fetchHistoryForTicket:$ticketId');
     var response = await http.get(
-        _uri('/ticket/$ticketId/history', {
+        uri('/ticket/$ticketId/history', {
           'fields': 'Created,Creator,Type,Data,Field,OldValue,NewValue',
           'page': '$page'
         }),
@@ -175,7 +175,7 @@ class APIService {
 
     log('fetchTransactionsForTicket:$ticketId');
     var response = await http.get(
-        _uri('/transactions', {
+        uri('/transactions', {
           'fields': 'Created,Creator,Type,Data,Field,OldValue,NewValue',
           'query': 'ObjectId=$ticketId AND Type!=EmailRecord',
           'page': '$page'
@@ -196,7 +196,7 @@ class APIService {
 
     log('fetchAttachmentsForTransaction:$transactionId');
     var response = await http.get(
-        _uri('/transaction/$transactionId/attachments',
+        uri('/transaction/$transactionId/attachments',
             {'fields': 'ContentType,Content', 'page': '$page'}),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
@@ -213,7 +213,7 @@ class APIService {
 
     log('fetchAttachmentsForTicket:$ticketId');
     var response = await http.get(
-        _uri('/ticket/$ticketId/attachments',
+        uri('/ticket/$ticketId/attachments',
             {'fields': 'ContentType,Content,TransactionId', 'page': '$page'}),
         headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
@@ -228,7 +228,7 @@ class APIService {
     assert(isUsable());
 
     log('fetchUser:$id');
-    var response = await http.get(_uri('/user/$id'), headers: baseHeaders());
+    var response = await http.get(uri('/user/$id'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       return User.readJson(json.decode(response.body));
     } else {
@@ -241,7 +241,7 @@ class APIService {
 
     log('takeTicket:$id');
     var response =
-        await http.put(_uri('/ticket/$id/take'), headers: baseHeaders());
+        await http.put(uri('/ticket/$id/take'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       log(response.body);
       return true;
@@ -255,7 +255,7 @@ class APIService {
 
     log('untakeTicket:$id');
     var response =
-        await http.put(_uri('/ticket/$id/untake'), headers: baseHeaders());
+        await http.put(uri('/ticket/$id/untake'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       log(response.body);
       return true;
@@ -269,7 +269,7 @@ class APIService {
 
     log('stealTicket:$id');
     var response =
-        await http.put(_uri('/ticket/$id/steal'), headers: baseHeaders());
+        await http.put(uri('/ticket/$id/steal'), headers: baseHeaders());
     if (response.statusCode == HttpStatus.ok) {
       log(response.body);
       return true;
@@ -282,7 +282,7 @@ class APIService {
     assert(isUsable());
 
     log('correspond:$id');
-    var response = await http.post(_uri('/ticket/$id/correspond'),
+    var response = await http.post(uri('/ticket/$id/correspond'),
         headers: baseHeaders(),
         body: jsonEncode({"ContentType": "text/plain", "Content": content}));
     if (response.statusCode == HttpStatus.noContent) {
@@ -297,7 +297,7 @@ class APIService {
     assert(isUsable());
 
     log('comment:$id');
-    var response = await http.post(_uri('/ticket/$id/comment'),
+    var response = await http.post(uri('/ticket/$id/comment'),
         headers: baseHeaders(),
         body: jsonEncode({"ContentType": "text/plain", "Content": content}));
     if (response.statusCode == HttpStatus.noContent) {

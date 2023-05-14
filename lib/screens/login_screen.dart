@@ -81,10 +81,7 @@ class LoginScreenState extends State<LoginScreen> {
       throw "Missing base uri";
     }
 
-    uri.pathSegments.add("Prefs");
-    uri.pathSegments.add("AuthTokens.html");
-
-    return uri;
+    return APIService.instance.uri('/Prefs/AuthTokens.html');
   }
 
   bool hasReachedTokensList(String? url) {
