@@ -1,4 +1,4 @@
-package net.thetabx.rt_flutter
+package fr.klso.rt_flutter
 
 import io.flutter.embedding.android.FlutterActivity
 
