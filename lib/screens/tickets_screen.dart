@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rt_flutter/components/app_drawer.dart';
 import 'package:rt_flutter/components/ticket_listitem.dart';
 import 'package:rt_flutter/models/appstate_model.dart';
 import 'package:rt_flutter/models/paginable_model.dart';
@@ -164,6 +165,7 @@ class TicketsScreenState extends State<TicketsScreen> {
             ),
           ],
         ),
+        drawer: const AppDrawer(),
         body: _tickets != null
             ? RefreshIndicator(
                 onRefresh: _getTickets,

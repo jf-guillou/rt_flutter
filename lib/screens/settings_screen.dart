@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:rt_flutter/components/app_drawer.dart';
 import 'package:rt_flutter/components/textfield_popup.dart';
 import 'package:rt_flutter/screens/login_screen.dart';
 import 'package:settings_ui/settings_ui.dart';
@@ -31,6 +32,7 @@ class SettingsScreenState extends State<SettingsScreen> {
       ),
       // We're using a Builder here so we have a context that is below the Scaffold
       // to allow calling Scaffold.of(context) so we can show a snackbar.
+      drawer: const AppDrawer(),
       body: SettingsList(
         sections: [
           SettingsSection(
