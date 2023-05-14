@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppState extends ChangeNotifier {
+  String? _url;
   String? _currentQueueId;
   String? _token;
   String? _id;
@@ -13,6 +14,7 @@ class AppState extends ChangeNotifier {
 
   _loadState() async {
     var prefs = await SharedPreferences.getInstance();
+    _url = prefs.getString('url');
     _currentQueueId = prefs.getString('current_queue');
     _token = prefs.getString('token');
     if (token != null) {
@@ -24,6 +26,13 @@ class AppState extends ChangeNotifier {
 
   String? tokenToUserId(String token) {
     return token.contains('-') ? token.split("-")[1] : null;
+  }
+
+  set url(String? url) {
+    _url = url;
+    notifyListeners();
+    SharedPreferences.getInstance()
+        .then((prefs) => prefs.setString('url', url ?? ""));
   }
 
   set currentQueue(String? id) {
@@ -52,6 +61,7 @@ class AppState extends ChangeNotifier {
         .then((prefs) => prefs.setString('id', id ?? ""));
   }
 
+  String? get url => _url;
   String? get currentQueue => _currentQueueId;
   String? get token => _token;
   String? get id => _id;

@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rt_flutter/models/api_config_model.dart';
+import 'package:rt_flutter/screens/settings_screen.dart';
 import 'package:rt_flutter/services/api_service.dart';
 import 'package:rt_flutter/screens/tickets_screen.dart';
 import 'package:rt_flutter/screens/login_screen.dart';
@@ -37,6 +37,27 @@ class SplashScreenState extends State<SplashScreen> {
       _state = "Setup services";
     });
 
+    // Fetch URL or goto Settings
+    String? url = appState.url;
+    log("_postPrefs:url:$url");
+    if (url == null || url.isEmpty) {
+      if (!context.mounted) return;
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const SettingsScreen()));
+      return;
+    }
+    APIService.instance.config.setUrl(url);
+
+    // Fetch token or goto Login
+    String? token = appState.token;
+    log("_postPrefs:token:$url");
+    if (token == null || token.isEmpty) {
+      if (!context.mounted) return;
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
+      return;
+    }
+    APIService.instance.config.setAuthToken(token);
 
     setState(() {
       _state = "Checking connectivity";
@@ -63,24 +84,9 @@ class SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  void _initAPIConfig() {
-    APIService.instance.config = APIConfig()
-      ..setUrl('https://snps.univ-nantes.fr/rt');
-
-    String? token = Provider.of<AppState>(context, listen: false).token;
-    log("_initAPIConfig:$token");
-    if (token != null && token.isNotEmpty) {
-      APIService.instance.config.setAuthToken(token);
-    }
-  }
-
   Future<void> _testConnectivity() async {
     log("_testConnectivity");
-    if (!APIService.instance.isUsable()) {
-      throw Exception('API credentials are invalid');
-    }
 
-    // Check connectivity and version
     var rt = await APIService.instance.fetchRTSystemInfo();
     if (!rt.isValidVersion()) {
       throw Exception('Unexpected RT version : ${rt.version}');

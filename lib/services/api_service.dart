@@ -32,15 +32,15 @@ class APIService {
     assert(config.hasUri());
 
     log('ping');
-    var response = await http
-        .get(Uri.https(config.uri!.host, '${config.uri!.path}$prefix/rt'));
-    if (response.statusCode == HttpStatus.unauthorized) {
-      if (json.decode(response.body)['message'] == 'Unauthorized') {
-        return true;
-      }
+    try {
+      var response = await http
+          .get(Uri.https(config.uri!.host, '${config.uri!.path}$prefix/rt'));
+      log('pong');
+      return response.statusCode != HttpStatus.notFound;
+    } catch (e) {
+      log(e.toString());
+      return false;
     }
-
-    return false;
   }
 
   Map<String, String> baseHeaders() {
