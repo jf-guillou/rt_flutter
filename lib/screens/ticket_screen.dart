@@ -24,6 +24,9 @@ class TicketScreen extends StatefulWidget {
 enum MenuItem { take, untake, steal, respond, comment }
 
 class TicketScreenState extends State<TicketScreen> {
+  bool _isEditMode = false;
+  bool _isComment = false;
+  String _textAreaContent = "";
   Ticket? _ticket;
   Paginable<Transaction>? _transactions;
   Paginable<Attachment>? _attachments;
@@ -115,8 +118,27 @@ class TicketScreenState extends State<TicketScreen> {
     _getTicket();
   }
 
-  Future<void> _respond() async {}
-  Future<void> _comment() async {}
+  void _toggleEditMode({comment = false}) {
+    log("_toggleEditMode");
+    _textAreaContent = "";
+    if (mounted) {
+      setState(() {
+        _isEditMode = !_isEditMode;
+        _isComment = comment;
+      });
+    }
+  }
+
+  Future<void> _send() async {
+    log("_send");
+    _isEditMode = false;
+    if (_textAreaContent == "") return;
+    if (_isComment) {
+      await APIService.instance.comment(widget.id!, _textAreaContent);
+    } else {
+      await APIService.instance.correspond(widget.id!, _textAreaContent);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,10 +163,10 @@ class TicketScreenState extends State<TicketScreen> {
                   _steal();
                   break;
                 case MenuItem.respond:
-                  _respond();
+                  _toggleEditMode(comment: false);
                   break;
                 case MenuItem.comment:
-                  _comment();
+                  _toggleEditMode(comment: true);
                   break;
               }
             },
@@ -185,7 +207,6 @@ class TicketScreenState extends State<TicketScreen> {
               Text('State: ${_ticket!.status}'),
               Text('Created: ${df.format(_ticket!.created!)}'),
               Text('LastUpdate: ${df.format(_ticket!.lastUpdated!)}'),
-              // Text('Creator: ${_ticket.creator.id}'),
               for (var u in _ticket!.requestors!) Text('Requestor: ${u.id}'),
               for (var u in _ticket!.cc!) Text('CC: ${u.id}'),
               for (var u in _ticket!.adminCc!) Text('AdminCC: ${u.id}'),
@@ -218,6 +239,19 @@ class TicketScreenState extends State<TicketScreen> {
                             AlwaysStoppedAnimation<Color>(Colors.redAccent),
                       ),
                     ),
+              _isEditMode
+                  ? Card(
+                      color: Colors.lime,
+                      child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                              maxLines: 4,
+                              onChanged: (value) => _textAreaContent = value,
+                              decoration: InputDecoration.collapsed(
+                                  hintText: _isComment
+                                      ? "Add a comment"
+                                      : "Add a response"))))
+                  : Container(),
             ])
           : const Center(
               child: CircularProgressIndicator(
@@ -225,11 +259,30 @@ class TicketScreenState extends State<TicketScreen> {
               ),
             ),
       floatingActionButton: _ticket != null
-          ? FloatingActionButton(
-              onPressed: () {
-                _canTake() ? _take() : _respond();
-              },
-              child: Icon(_canTake() ? Icons.shopping_cart : Icons.edit))
+          ? Wrap(direction: Axis.vertical, children: [
+              _isEditMode
+                  ? Container(
+                      margin: const EdgeInsets.all(4),
+                      child: FloatingActionButton(
+                        mini: true,
+                        onPressed: _toggleEditMode,
+                        child: const Icon(Icons.close),
+                      ))
+                  : const Text(''),
+              FloatingActionButton(
+                  onPressed: () {
+                    _isEditMode
+                        ? _send()
+                        : _canTake()
+                            ? _take()
+                            : _toggleEditMode(comment: false);
+                  },
+                  child: Icon(_isEditMode
+                      ? Icons.send
+                      : _canTake()
+                          ? Icons.pan_tool_outlined
+                          : Icons.edit)),
+            ])
           : null,
     );
   }
