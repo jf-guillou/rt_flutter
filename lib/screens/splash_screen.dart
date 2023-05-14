@@ -50,8 +50,7 @@ class SplashScreenState extends State<SplashScreen> {
     String? token = Provider.of<AppState>(context, listen: false).token;
     log("_initAPIConfig:$token");
     if (token != null && token.isNotEmpty) {
-      log(token);
-      APIService.instance.config?.setAuthToken(token);
+      APIService.instance.config.setAuthToken(token);
     }
   }
 

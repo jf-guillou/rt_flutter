@@ -17,23 +17,23 @@ class APIService {
   static final APIService instance = APIService._instantiate();
   static const prefix = '/REST/2.0';
 
-  APIConfig? config;
+  APIConfig config = APIConfig();
 
   bool isUsable() {
-    return config != null && config!.isUsable();
+    return config.hasUri() && config.hasAuth();
   }
 
   Uri uri(String path, [Map<String, dynamic>? queryParameters]) {
     return Uri.https(
-        config!.uri!.host, '${config!.uri!.path}$prefix$path', queryParameters);
+        config.uri!.host, '${config.uri!.path}$prefix$path', queryParameters);
   }
 
   Future<bool> ping() async {
-    assert(config != null && config!.isConnectable());
+    assert(config.hasUri());
 
     log('ping');
     var response = await http
-        .get(Uri.https(config!.uri!.host, '${config!.uri!.path}$prefix/rt'));
+        .get(Uri.https(config.uri!.host, '${config.uri!.path}$prefix/rt'));
     if (response.statusCode == HttpStatus.unauthorized) {
       if (json.decode(response.body)['message'] == 'Unauthorized') {
         return true;
@@ -45,7 +45,7 @@ class APIService {
 
   Map<String, String> baseHeaders() {
     return {
-      HttpHeaders.authorizationHeader: config!.authorizationHeader(),
+      HttpHeaders.authorizationHeader: config.authorizationHeader(),
       HttpHeaders.contentTypeHeader: 'application/json',
       HttpHeaders.acceptHeader: 'application/json',
     };

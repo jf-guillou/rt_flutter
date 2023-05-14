@@ -74,7 +74,7 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   Uri tokenListUrl() {
-    Uri? uri = APIService.instance.config!.uri;
+    Uri? uri = APIService.instance.config.uri;
     if (uri == null) {
       throw "Missing base uri";
     }

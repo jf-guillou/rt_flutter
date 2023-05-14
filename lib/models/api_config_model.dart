@@ -5,15 +5,11 @@ class APIConfig {
   String? _authBasic;
   String? _authToken;
 
-  bool isConnectable() {
+  bool hasUri() {
     return uri != null;
   }
 
-  bool isUsable() {
-    return isConnectable() && canAuth();
-  }
-
-  bool canAuth() {
+  bool hasAuth() {
     return _authBasic != null || _authToken != null;
   }
 
@@ -35,7 +31,7 @@ class APIConfig {
   }
 
   String authorizationHeader() {
-    if (!canAuth()) {
+    if (!hasAuth()) {
       throw 'APIConfig is missing either username & password or auth token';
     }
 
