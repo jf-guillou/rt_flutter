@@ -277,4 +277,34 @@ class APIService {
       throw 'Unexpected status code : ${response.statusCode}';
     }
   }
+
+  Future<bool> correspond(String id, String content) async {
+    assert(isUsable());
+
+    log('correspond:$id');
+    var response = await http.post(_uri('/ticket/$id/correspond'),
+        headers: baseHeaders(),
+        body: jsonEncode({"ContentType": "text/plain", "Content": content}));
+    if (response.statusCode == HttpStatus.noContent) {
+      log(response.body);
+      return true;
+    } else {
+      throw 'Unexpected status code : ${response.statusCode}';
+    }
+  }
+
+  Future<bool> comment(String id, String content) async {
+    assert(isUsable());
+
+    log('comment:$id');
+    var response = await http.post(_uri('/ticket/$id/comment'),
+        headers: baseHeaders(),
+        body: jsonEncode({"ContentType": "text/plain", "Content": content}));
+    if (response.statusCode == HttpStatus.noContent) {
+      log(response.body);
+      return true;
+    } else {
+      throw 'Unexpected status code : ${response.statusCode}';
+    }
+  }
 }
