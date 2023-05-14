@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:rt_flutter/models/attachment_model.dart';
 import 'package:rt_flutter/models/transaction_model.dart';
 
 class TransactionListItem extends StatefulWidget {
@@ -10,6 +12,8 @@ class TransactionListItem extends StatefulWidget {
 }
 
 class TransactionListItemState extends State<TransactionListItem> {
+  DateFormat df = DateFormat.yMd().add_Hms();
+
   @override
   void initState() {
     super.initState();
@@ -22,21 +26,30 @@ class TransactionListItemState extends State<TransactionListItem> {
       case "Status":
         return ListTile(
             title: Text("${widget.t.tType}:${widget.t.field}"),
-            subtitle: Text("${widget.t.oldValue} ➡️ ${widget.t.newValue}"));
+            subtitle: Text(
+                "${widget.t.oldValue} ➡️ ${widget.t.newValue} (${df.format(widget.t.created!)})"));
       case "AddWatcher":
       case "SetWatcher":
         return ListTile(
             title: Text("${widget.t.tType}:${widget.t.field}"),
-            subtitle: Text("${widget.t.oldValue} ➡️ ${widget.t.newValue}"));
+            subtitle: Text(
+                "${widget.t.oldValue} ➡️ ${widget.t.newValue} (${df.format(widget.t.created!)})"));
       default:
+        String attachments = widget.t.attachments != null
+            ? _getAttachementContents(widget.t.attachments!)
+            : "";
         return ListTile(
-            title: Text(widget.t.tType!),
-            subtitle: widget.t.attachments != null
-                ? Text(widget.t.attachments!
-                    .where((e) => e.contentType == "text/plain")
-                    .map((e) => e.content)
-                    .join("\n"))
+            title: Text("${widget.t.tType}"),
+            subtitle: attachments != ""
+                ? Text("$attachments\n${df.format(widget.t.created!)}")
                 : null);
     }
+  }
+
+  String _getAttachementContents(List<Attachment> attachments) {
+    return attachments
+        .where((e) => e.contentType == "text/plain")
+        .map((e) => e.content)
+        .join("\n");
   }
 }
