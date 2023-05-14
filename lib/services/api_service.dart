@@ -103,7 +103,7 @@ class APIService {
     }
   }
 
-  Future<Ticket> fetchTicket(String? id) async {
+  Future<Ticket> fetchTicket(String id) async {
     assert(isUsable());
 
     log('fetchTicket:$id');
@@ -115,8 +115,7 @@ class APIService {
     }
   }
 
-  Future<Paginable<Ticket>> fetchTickets(String? queueId,
-      {int page = 1}) async {
+  Future<Paginable<Ticket>> fetchTickets(String queueId, {int page = 1}) async {
     assert(isUsable());
 
     log('fetchTickets:$queueId');
@@ -151,11 +150,11 @@ class APIService {
   }
 
   // DEPRECATED
-  Future<Paginable<Transaction>> fetchHistoryForTicket(String? ticketId,
+  Future<Paginable<Transaction>> fetchHistoryForTicket(String ticketId,
       {int page = 1}) async {
     assert(isUsable());
 
-    log('fetchTransactionsForTicket:$ticketId');
+    log('fetchHistoryForTicket:$ticketId');
     var response = await http.get(
         _uri('/ticket/$ticketId/history', {
           'fields': 'Created,Creator,Type,Data,Field,OldValue,NewValue',
@@ -170,7 +169,7 @@ class APIService {
     }
   }
 
-  Future<Paginable<Transaction>> fetchTransactionsForTicket(String? ticketId,
+  Future<Paginable<Transaction>> fetchTransactionsForTicket(String ticketId,
       {int page = 1}) async {
     assert(isUsable());
 
@@ -191,7 +190,7 @@ class APIService {
   }
 
   Future<Paginable<Attachment>> fetchAttachmentsForTransaction(
-      String? transactionId,
+      String transactionId,
       {int page = 1}) async {
     assert(isUsable());
 
@@ -208,7 +207,7 @@ class APIService {
     }
   }
 
-  Future<Paginable<Attachment>> fetchAttachmentsForTicket(String? ticketId,
+  Future<Paginable<Attachment>> fetchAttachmentsForTicket(String ticketId,
       {int page = 1}) async {
     assert(isUsable());
 
@@ -225,7 +224,7 @@ class APIService {
     }
   }
 
-  Future<User> fetchUser(String? id) async {
+  Future<User> fetchUser(String id) async {
     assert(isUsable());
 
     log('fetchUser:$id');
@@ -237,7 +236,7 @@ class APIService {
     }
   }
 
-  Future<bool> takeTicket(String? id) async {
+  Future<bool> takeTicket(String id) async {
     assert(isUsable());
 
     log('takeTicket:$id');
@@ -251,7 +250,7 @@ class APIService {
     }
   }
 
-  Future<bool> untakeTicket(String? id) async {
+  Future<bool> untakeTicket(String id) async {
     assert(isUsable());
 
     log('untakeTicket:$id');
@@ -265,7 +264,7 @@ class APIService {
     }
   }
 
-  Future<bool> stealTicket(String? id) async {
+  Future<bool> stealTicket(String id) async {
     assert(isUsable());
 
     log('stealTicket:$id');

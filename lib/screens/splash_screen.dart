@@ -70,7 +70,7 @@ class SplashScreenState extends State<SplashScreen> {
 
   Future<void> _fetchUserNameIfNecessary(AppState appState) async {
     if (appState.id == null || appState.id == "") {
-      var user = await APIService.instance.fetchUser(appState.uid);
+      var user = await APIService.instance.fetchUser(appState.uid!);
       log("_fetchUserNameIfNecessary:${user.username}");
       appState.id = user.username;
     }

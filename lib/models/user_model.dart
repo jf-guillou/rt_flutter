@@ -26,10 +26,8 @@ class User extends ItemModel {
   bool isNobody() => id == "Nobody";
 
   Future<User> fetch({force = false}) async {
-    assert(id != null);
-
     return isStale() || isIncomplete() || force
-        ? mergeWith(await APIService.instance.fetchUser(id))
+        ? mergeWith(await APIService.instance.fetchUser(id!))
         : this;
   }
 

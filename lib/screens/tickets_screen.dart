@@ -58,7 +58,8 @@ class TicketsScreenState extends State<TicketsScreen> {
       _tickets = null;
     });
     var provider = Provider.of<AppState>(context, listen: false);
-    var tickets = await APIService.instance.fetchTickets(provider.currentQueue);
+    var tickets =
+        await APIService.instance.fetchTickets(provider.currentQueue!);
     if (mounted) {
       setState(() {
         _tickets = tickets;
@@ -70,7 +71,7 @@ class TicketsScreenState extends State<TicketsScreen> {
     var provider = Provider.of<AppState>(context, listen: false);
     var page = _tickets!.page + 1;
     var tickets = await APIService.instance
-        .fetchTickets(provider.currentQueue, page: page);
+        .fetchTickets(provider.currentQueue!, page: page);
     if (mounted) {
       setState(() {
         _tickets!.mergeWith(tickets);

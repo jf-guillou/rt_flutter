@@ -46,7 +46,7 @@ class TicketScreenState extends State<TicketScreen> {
   }
 
   Future<void> _getTicket() async {
-    var ticket = await APIService.instance.fetchTicket(widget.id);
+    var ticket = await APIService.instance.fetchTicket(widget.id!);
     if (mounted) {
       setState(() {
         _ticket = ticket;
@@ -56,9 +56,9 @@ class TicketScreenState extends State<TicketScreen> {
 
   Future<void> _getHistory() async {
     var transactions =
-        await APIService.instance.fetchTransactionsForTicket(widget.id);
+        await APIService.instance.fetchTransactionsForTicket(widget.id!);
     var attachments =
-        await APIService.instance.fetchAttachmentsForTicket(widget.id);
+        await APIService.instance.fetchAttachmentsForTicket(widget.id!);
     for (var a in attachments.items) {
       transactions.getElementById(a.transactionId)?.attachments!.add(a);
     }
@@ -73,9 +73,9 @@ class TicketScreenState extends State<TicketScreen> {
   Future<void> _appendHistory() async {
     var page = _transactions!.page + 1;
     var transactions = await APIService.instance
-        .fetchTransactionsForTicket(widget.id, page: page);
+        .fetchTransactionsForTicket(widget.id!, page: page);
     var attachments = await APIService.instance
-        .fetchAttachmentsForTicket(widget.id, page: page);
+        .fetchAttachmentsForTicket(widget.id!, page: page);
     for (var a in attachments.items) {
       transactions.getElementById(a.transactionId)!.attachments!.add(a);
     }
@@ -98,19 +98,20 @@ class TicketScreenState extends State<TicketScreen> {
 
   Future<void> _take() async {
     log("take");
-    await APIService.instance.takeTicket(widget.id);
+    await APIService.instance.takeTicket(widget.id!);
     _getTicket();
   }
 
   Future<void> _untake() async {
     log("untake");
-    await APIService.instance.untakeTicket(widget.id);
+    await APIService.instance.untakeTicket(widget.id!);
     _getTicket();
   }
 
   Future<void> _steal() async {
+    if (widget.id == null) return;
     log("steal");
-    await APIService.instance.stealTicket(widget.id);
+    await APIService.instance.stealTicket(widget.id!);
     _getTicket();
   }
 
