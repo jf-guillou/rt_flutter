@@ -16,7 +16,8 @@ class RT extends StatelessWidget {
     return MaterialApp(
       title: 'Request Tracker Flutter client',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const SplashScreen(),
